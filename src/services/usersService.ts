@@ -117,6 +117,9 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
           }
 
           let picUrl = data.profilePic || DEFAULT_AVATAR;
+          if (picUrl.startsWith('data:image/svg+xml')) {
+            picUrl = DEFAULT_AVATAR;
+          }
           const assignedUserId = data.userId || `USR-${defaultUserCounter++}`;
 
           return {

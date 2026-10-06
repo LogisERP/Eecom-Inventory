@@ -100,6 +100,11 @@ export async function authenticateUser(phoneInput: string, passwordInput: string
       }
     }
 
+    let userProfilePic = userData.profilePic || DEFAULT_AVATAR;
+    if (userProfilePic.startsWith("data:image/svg+xml")) {
+      userProfilePic = DEFAULT_AVATAR;
+    }
+
     const authenticatedUser: UserItem = {
       id: matchedDoc.id,
       userId: finalUserId,
@@ -112,7 +117,7 @@ export async function authenticateUser(phoneInput: string, passwordInput: string
       isActive: userData.isActive !== undefined ? userData.isActive : true,
       timeFormat: userData.timeFormat || "12-hour (hh:mm A)",
       timeZone: userData.timeZone || "IST (Asia/Kolkata - UTC+05:30)",
-      profilePic: userData.profilePic || DEFAULT_AVATAR,
+      profilePic: userProfilePic,
       createdAt: createdAtStr,
     };
 
