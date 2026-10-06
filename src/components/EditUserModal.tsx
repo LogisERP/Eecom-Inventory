@@ -26,7 +26,8 @@ import {
   isEmailUnique,
   updateUserInDb,
   DEFAULT_GIT_PROFILE_PICS,
-  FALLBACK_AVATARS
+  FALLBACK_AVATARS,
+  formatGitFileServerUrl
 } from '../services/usersService';
 import { RoleLookupModal } from './RoleLookupModal';
 
@@ -112,13 +113,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setProfilePic(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      const gitUrl = formatGitFileServerUrl(file.name);
+      setProfilePic(gitUrl);
     }
   };
 
@@ -240,22 +236,35 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                   Profile Picture <span className="text-rose-500">*</span>
                 </label>
                 <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                  Git File Server / Upload
+                  Git File Server URL Only (No Base64)
                 </span>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 <img
                   src={profilePic}
                   alt="Profile Preview"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = FALLBACK_AVATARS[0];
                   }}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md bg-slate-200 shrink-0"
+                  className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md bg-slate-200 shrink-0 mt-1"
                 />
 
-                <div className="flex-1 flex flex-col gap-2">
-                  <span className="text-[11px] font-bold text-slate-600">Choose Avatar:</span>
+                <div className="flex-1 flex flex-col gap-2.5">
+                  {/* Git Raw URL Text Input */}
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-bold text-slate-700">Git File Server Raw URL:</span>
+                    <input
+                      type="url"
+                      value={profilePic}
+                      onChange={(e) => setProfilePic(e.target.value)}
+                      placeholder="https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/..."
+                      required
+                      className="w-full px-3 py-2 text-xs font-mono text-slate-800 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
+                  </div>
+
+                  <span className="text-[11px] font-bold text-slate-600">Choose Avatar / Select File:</span>
                   <div className="flex items-center gap-2 overflow-x-auto pb-1">
                     {DEFAULT_GIT_PROFILE_PICS.concat(FALLBACK_AVATARS).slice(0, 5).map((url, idx) => (
                       <img
@@ -272,7 +281,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
 
                   <label className="w-fit px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition-colors">
                     <Upload className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Upload New Photo</span>
+                    <span>Select Image File</span>
                     <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                   </label>
                 </div>

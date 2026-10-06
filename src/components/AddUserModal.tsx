@@ -25,7 +25,8 @@ import {
   isEmailUnique,
   addUserToDb,
   DEFAULT_GIT_PROFILE_PICS,
-  FALLBACK_AVATARS
+  FALLBACK_AVATARS,
+  formatGitFileServerUrl
 } from '../services/usersService';
 import { RoleLookupModal } from './RoleLookupModal';
 
@@ -98,17 +99,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Handle local image file upload
+  // Handle local image file upload -> convert to Git File Server URL
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setProfilePic(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      const gitUrl = formatGitFileServerUrl(file.name);
+      setProfilePic(gitUrl);
     }
   };
 
@@ -234,7 +230,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               </div>
             )}
 
-            {/* Profile Picture Section (Mandatory & Git File Server integration) */}
+            {/* Profile Picture Section (Mandatory Git File Server URL) */}
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -242,18 +238,17 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   Profile Picture <span className="text-rose-500">*</span>
                 </label>
                 <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                  Mandatory (Git File Server)
+                  Git File Server URL Only (No Base64)
                 </span>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 {/* Preview Thumbnail */}
-                <div className="relative group shrink-0">
+                <div className="relative group shrink-0 mt-1">
                   <img
                     src={profilePic}
                     alt="Profile Preview"
                     onError={(e) => {
-                      // Fallback if image fails to load
                       (e.target as HTMLImageElement).src = FALLBACK_AVATARS[0];
                     }}
                     className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md bg-slate-200"
@@ -263,8 +258,21 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col gap-2">
-                  <span className="text-[11px] font-bold text-slate-600">Select Avatar from Git File Server or Upload:</span>
+                <div className="flex-1 flex flex-col gap-2.5">
+                  {/* Git Raw URL Text Input */}
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-bold text-slate-700">Git File Server Raw URL:</span>
+                    <input
+                      type="url"
+                      value={profilePic}
+                      onChange={(e) => setProfilePic(e.target.value)}
+                      placeholder="https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/..."
+                      required
+                      className="w-full px-3 py-2 text-xs font-mono text-slate-800 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
+                  </div>
+
+                  <span className="text-[11px] font-bold text-slate-600">Or Select Preset / Upload:</span>
 
                   {/* Preset Avatars */}
                   <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -285,16 +293,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   <div className="flex items-center gap-2">
                     <label className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 shrink-0 transition-colors">
                       <Upload className="w-3.5 h-3.5 text-slate-500" />
-                      <span>Upload Local Image</span>
+                      <span>Select Image File</span>
                       <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                     </label>
                   </div>
                 </div>
               </div>
-
-              <p className="text-[10px] text-slate-500 font-mono">
-                Asset Path: <span className="text-slate-700 font-semibold">{profilePic.length > 60 ? profilePic.slice(0, 60) + '...' : profilePic}</span>
-              </p>
             </div>
 
             {/* Grid 2 Columns: User Name & Email */}
