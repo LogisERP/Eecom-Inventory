@@ -73,26 +73,26 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       {/* Right controls */}
       <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
 
-        {/* Search pill */}
-        <div className="flex items-center gap-2 bg-slate-100 rounded-full px-3.5 py-1.5 sm:py-2 border border-slate-200/80 flex-1 sm:w-56 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-400 transition-all">
-          <Search className="w-4 h-4 text-slate-400 shrink-0" />
+        {/* High Contrast Prominent Search Bar */}
+        <div className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2 border-2 border-slate-300/90 flex-1 sm:w-64 focus-within:ring-4 focus-within:ring-blue-500/15 focus-within:border-blue-600 shadow-xs hover:border-slate-400 transition-all">
+          <Search className="w-4 h-4 text-blue-600 shrink-0 font-extrabold" />
           <input
             type="text"
-            placeholder="Search Product...."
+            placeholder="Search Products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent border-none outline-none text-xs text-slate-700 font-medium placeholder-slate-400 w-full"
+            className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-500 placeholder:font-medium w-full"
           />
         </div>
 
         {/* Action icons (Desktop) */}
         <div className="hidden sm:flex items-center gap-2.5">
-          <button className="relative w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200/80 flex items-center justify-center transition-colors">
+          <button className="relative w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors shadow-xs">
             <Bell className="w-4 h-4 text-slate-600" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full ring-2 ring-white" />
           </button>
 
-          <button className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200/80 flex items-center justify-center transition-colors">
+          <button className="w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors shadow-xs">
             <MessageSquare className="w-4 h-4 text-slate-600" />
           </button>
 
@@ -100,9 +100,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <div className="relative">
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2.5 bg-white rounded-full pl-1.5 pr-3 py-1 border border-slate-200/90 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group"
+              className="flex items-center gap-2.5 bg-white rounded-full pl-1.5 pr-3.5 py-1.5 border border-slate-200/90 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-xs"
             >
-              <div className="relative">
+              <div className="relative shrink-0">
                 <img
                   src={avatarUrl}
                   alt={currentUser?.userName || 'User'}
@@ -116,21 +116,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
               </div>
 
-              <div className="flex flex-col min-w-0 max-w-[130px]">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-extrabold text-slate-800 leading-tight truncate group-hover:text-blue-600 transition-colors">
-                    {currentUser?.userName || 'Varatharajan R'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center gap-0.5 truncate">
-                    <Shield className="w-2.5 h-2.5 text-blue-500 shrink-0" />
-                    {currentUser?.roleName || 'Administrator'}
-                  </span>
-                  <span className="text-[9px] font-mono font-bold text-slate-400 bg-slate-100 px-1 rounded">
-                    {currentUser?.userId || 'USR-1001'}
-                  </span>
-                </div>
+              <div className="flex flex-col min-w-0 max-w-[140px]">
+                <span className="text-xs font-extrabold text-slate-900 leading-tight truncate group-hover:text-blue-600 transition-colors">
+                  {currentUser?.userName || 'Varatharajan R'}
+                </span>
+                <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center gap-1 truncate mt-0.5">
+                  <Shield className="w-2.5 h-2.5 text-blue-500 shrink-0" />
+                  {currentUser?.roleName || 'Administrator'}
+                </span>
               </div>
 
               <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180 text-blue-600' : ''}`} />

@@ -130,13 +130,13 @@ export const RoleView: React.FC = () => {
       {/* Toolbar & Search */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="relative w-full sm:w-96">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-purple-600 absolute left-3.5 top-3 font-extrabold" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Role name or Role ID..."
-            className="w-full pl-10 pr-4 py-2 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all placeholder:text-slate-400"
+            className="w-full pl-10 pr-4 py-2 text-xs font-bold text-slate-900 bg-white border-2 border-slate-300/90 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500/15 focus:border-purple-600 shadow-xs transition-all placeholder:text-slate-500 placeholder:font-medium"
           />
         </div>
 
