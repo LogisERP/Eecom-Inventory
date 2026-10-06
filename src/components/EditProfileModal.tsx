@@ -35,7 +35,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 }) => {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneDigits, setPhoneDigits] = useState('');
   const [password, setPassword] = useState('');
   const [timeFormat, setTimeFormat] = useState('12-hour (hh:mm A)');
   const [timeZone, setTimeZone] = useState('IST (Asia/Kolkata - UTC+05:30)');
@@ -50,7 +50,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     if (currentUser) {
       setUserName(currentUser.userName || '');
       setEmail(currentUser.email || '');
-      setPhoneNumber(currentUser.phoneNumber || '');
+      
+      // Extract 10 digits from existing phone number
+      const rawDigits = (currentUser.phoneNumber || '').replace(/\D/g, '');
+      const last10 = rawDigits.length >= 10 ? rawDigits.slice(-10) : rawDigits;
+      setPhoneDigits(last10);
+
       setPassword(currentUser.password || '');
       setTimeFormat(currentUser.timeFormat || '12-hour (hh:mm A)');
       setTimeZone(currentUser.timeZone || 'IST (Asia/Kolkata - UTC+05:30)');
@@ -76,7 +81,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       setErrorMsg("Please provide a valid email address.");
       return;
     }
-    if (!phoneNumber.trim() || !validatePhone10Digits(phoneNumber)) {
+    if (!phoneDigits.trim() || !validatePhone10Digits(phoneDigits)) {
       setErrorMsg("Please enter a valid 10-digit phone number.");
       return;
     }
@@ -88,10 +93,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     try {
       setSubmitting(true);
 
-      // Format phone number with standard +91 prefix
-      const digits = phoneNumber.replace(/\D/g, '');
-      const cleanDigits = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
-      const formattedPhone = `+91 ${cleanDigits}`;
+      // Standardize phone format as +91 XXXXXXXXXX
+      const formattedPhone = `+91 ${phoneDigits.trim()}`;
 
       const updatedUser: UserItem = {
         ...currentUser,
@@ -251,14 +254,20 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 <Phone className="w-3.5 h-3.5 text-slate-500" />
                 Phone Number <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="text"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="e.g. +91 9876543210"
-                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                required
-              />
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-2.5 text-xs font-extrabold text-slate-700 bg-slate-200/80 border border-slate-300 rounded-xl select-none shrink-0 font-mono">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  value={phoneDigits}
+                  maxLength={10}
+                  onChange={(e) => setPhoneDigits(e.target.value.replace(/\D/g, ''))}
+                  placeholder="9876543210"
+                  className="w-full px-3.5 py-2.5 text-xs font-bold font-mono text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  required
+                />
+              </div>
             </div>
 
             {/* Email Address */}
