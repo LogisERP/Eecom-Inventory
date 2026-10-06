@@ -11,7 +11,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
 
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState<string | null>(
-    'Hello John! I am your AI Inventory Assistant for Retail - X. How can I optimize your stock levels today?'
+    'Hello! I am your AI Inventory Assistant for Ecom ERP. How can I optimize your stock levels today?'
   );
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -40,7 +40,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
             </div>
             <div>
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5">
-                Retail - X AI Magic
+                Ecom ERP AI Magic
                 <Sparkles className="w-4 h-4 text-amber-500" />
               </h3>
               <span className="text-[11px] text-slate-500 font-medium">Empowering decisions with machine learning</span>

@@ -59,11 +59,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {/* Logo */}
         <div className="flex items-center justify-between px-2 pb-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-              <span className="text-base font-black text-white">R</span>
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-xs">
+              <span className="text-base font-black text-white">E</span>
             </div>
-            <span className="text-lg font-extrabold text-white tracking-tight">
-              Retail <span className="text-[#60a5fa]">- X</span>
+            <span className="text-lg font-extrabold tracking-tight">
+              <span className="text-white">Ecom </span>
+              <span className="text-blue-400">ERP</span>
             </span>
           </div>
 
