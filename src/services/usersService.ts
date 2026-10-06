@@ -12,38 +12,9 @@ import {
 import { db } from "../firebase";
 import type { UserItem } from "../types/people";
 
+import { MALE_AVATARS, FEMALE_AVATARS, DEFAULT_AVATAR } from "../utils/avatars";
+
 const COLLECTION_NAME = "users";
-
-// Base URL for Git file server profile pictures
-export const GIT_FILE_SERVER_BASE_URL = "https://raw.githubusercontent.com/LogisERP/file-server/main";
-
-// Verified working Git File Server profile image URL provided by user
-export const VALID_GIT_FILE_SERVER_SAMPLE = "https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/1789668943712_images.jpg";
-
-export const DEFAULT_GIT_PROFILE_PICS = [
-  "https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/1789668943712_images.jpg",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80"
-];
-
-// Helper to format file uploads as Git file server repository raw URLs
-export function formatGitFileServerUrl(filename?: string): string {
-  if (!filename) return VALID_GIT_FILE_SERVER_SAMPLE;
-  if (filename.startsWith("http://") || filename.startsWith("https://")) {
-    return filename;
-  }
-  // If it's a local file upload name, return the verified git file server sample URL
-  return VALID_GIT_FILE_SERVER_SAMPLE;
-}
-
-// Fallback high quality avatars for UI preview if network image returns 404
-export const FALLBACK_AVATARS = [
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80"
-];
 
 // Seed initial users if database is empty
 const SEED_USERS: Omit<UserItem, "id">[] = [
@@ -57,7 +28,7 @@ const SEED_USERS: Omit<UserItem, "id">[] = [
     isActive: true,
     timeFormat: "12-hour (hh:mm A)",
     timeZone: "IST (Asia/Kolkata - UTC+05:30)",
-    profilePic: VALID_GIT_FILE_SERVER_SAMPLE,
+    profilePic: MALE_AVATARS[0].url,
     createdAt: new Date().toISOString()
   },
   {
@@ -70,7 +41,7 @@ const SEED_USERS: Omit<UserItem, "id">[] = [
     isActive: true,
     timeFormat: "24-hour (HH:mm)",
     timeZone: "IST (Asia/Kolkata - UTC+05:30)",
-    profilePic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+    profilePic: FEMALE_AVATARS[0].url,
     createdAt: new Date().toISOString()
   }
 ];
@@ -130,15 +101,7 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
             createdAtStr = data.createdAt;
           }
 
-          let picUrl = data.profilePic || VALID_GIT_FILE_SERVER_SAMPLE;
-          if (
-            picUrl.includes("_profile.jpg") ||
-            picUrl.includes("admin_avatar.png") ||
-            picUrl.includes("manager_avatar.png") ||
-            picUrl.includes("user_avatar")
-          ) {
-            picUrl = VALID_GIT_FILE_SERVER_SAMPLE;
-          }
+          let picUrl = data.profilePic || DEFAULT_AVATAR;
 
           return {
             id: docSnap.id,

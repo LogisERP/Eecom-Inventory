@@ -18,7 +18,8 @@ import {
   Edit3
 } from 'lucide-react';
 import type { UserItem } from '../types/people';
-import { deleteUserFromDb, FALLBACK_AVATARS } from '../services/usersService';
+import { deleteUserFromDb } from '../services/usersService';
+import { DEFAULT_AVATAR } from '../utils/avatars';
 
 interface UserDetailModalProps {
   user: UserItem | null;
@@ -70,12 +71,12 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
 
           <div className="flex items-center gap-4">
             <img
-              src={user.profilePic}
+              src={user.profilePic || DEFAULT_AVATAR}
               alt={user.userName}
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
                 img.onerror = null;
-                img.src = FALLBACK_AVATARS[0];
+                img.src = DEFAULT_AVATAR;
               }}
               className="w-16 h-16 rounded-2xl object-cover border-2 border-blue-400/40 shadow-lg bg-slate-800 shrink-0"
             />

@@ -15,7 +15,8 @@ import {
   Phone
 } from 'lucide-react';
 import type { UserItem, RoleItem } from '../types/people';
-import { subscribeUsers, deleteUserFromDb, FALLBACK_AVATARS } from '../services/usersService';
+import { subscribeUsers, deleteUserFromDb } from '../services/usersService';
+import { DEFAULT_AVATAR } from '../utils/avatars';
 import { subscribeRoles } from '../services/rolesService';
 import { AddUserModal } from './AddUserModal';
 import { EditUserModal } from './EditUserModal';
@@ -201,12 +202,12 @@ export const UserView: React.FC = () => {
                       <td className="py-3.5 px-5">
                         <div className="flex items-center gap-3">
                           <img
-                            src={u.profilePic}
+                            src={u.profilePic || DEFAULT_AVATAR}
                             alt={u.userName}
                             onError={(e) => {
                               const img = e.target as HTMLImageElement;
                               img.onerror = null;
-                              img.src = FALLBACK_AVATARS[0];
+                              img.src = DEFAULT_AVATAR;
                             }}
                             className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />

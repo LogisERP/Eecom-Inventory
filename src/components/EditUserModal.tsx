@@ -8,7 +8,6 @@ import {
   Shield,
   Clock,
   Globe,
-  Upload,
   AlertCircle,
   CheckCircle2,
   Loader2,
@@ -16,7 +15,6 @@ import {
   ToggleRight,
   Eye,
   EyeOff,
-  Image as ImageIcon,
   Edit3
 } from 'lucide-react';
 import type { UserItem, RoleItem } from '../types/people';
@@ -24,12 +22,11 @@ import {
   validateEmail,
   validatePhone10Digits,
   isEmailUnique,
-  updateUserInDb,
-  DEFAULT_GIT_PROFILE_PICS,
-  FALLBACK_AVATARS,
-  formatGitFileServerUrl
+  updateUserInDb
 } from '../services/usersService';
+import { DEFAULT_AVATAR } from '../utils/avatars';
 import { RoleLookupModal } from './RoleLookupModal';
+import { AvatarPicker } from './AvatarPicker';
 
 interface EditUserModalProps {
   user: UserItem | null;
@@ -72,7 +69,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   const [isActive, setIsActive] = useState(true);
   const [timeFormat, setTimeFormat] = useState(TIME_FORMAT_OPTIONS[0]);
   const [timeZone, setTimeZone] = useState(TIME_ZONE_OPTIONS[0]);
-  const [profilePic, setProfilePic] = useState(DEFAULT_GIT_PROFILE_PICS[0]);
+  const [profilePic, setProfilePic] = useState(DEFAULT_AVATAR);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,7 +97,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       setIsActive(user.isActive !== undefined ? user.isActive : true);
       setTimeFormat(user.timeFormat || TIME_FORMAT_OPTIONS[0]);
       setTimeZone(user.timeZone || TIME_ZONE_OPTIONS[0]);
-      setProfilePic(user.profilePic || DEFAULT_GIT_PROFILE_PICS[0]);
+      setProfilePic(user.profilePic || DEFAULT_AVATAR);
 
       setErrorMsg(null);
       setIsSubmitting(false);
@@ -109,14 +106,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   }, [isOpen, user, availableRoles]);
 
   if (!isOpen || !user) return null;
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const gitUrl = formatGitFileServerUrl(file.name);
-      setProfilePic(gitUrl);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,7 +140,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     }
 
     if (!profilePic) {
-      setErrorMsg('Profile picture is mandatory.');
+      setErrorMsg('Profile avatar is mandatory.');
       return;
     }
 
@@ -200,7 +189,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               </div>
               <div>
                 <h3 className="text-base font-bold tracking-tight text-white">Edit User Profile</h3>
-                <p className="text-xs text-slate-400 font-medium">Update account details, role assignment & profile picture</p>
+                <p className="text-xs text-slate-400 font-medium">Update account details, role assignment & profile avatar</p>
               </div>
             </div>
             <button
@@ -228,67 +217,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               </div>
             )}
 
-            {/* Profile Picture Section */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                  <ImageIcon className="w-4 h-4 text-blue-600" />
-                  Profile Picture <span className="text-rose-500">*</span>
-                </label>
-                <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                  Git File Server URL Only (No Base64)
-                </span>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <img
-                  src={profilePic}
-                  alt="Profile Preview"
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.onerror = null;
-                    img.src = FALLBACK_AVATARS[0];
-                  }}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md bg-slate-200 shrink-0 mt-1"
-                />
-
-                <div className="flex-1 flex flex-col gap-2.5">
-                  {/* Git Raw URL Text Input */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-bold text-slate-700">Git File Server Raw URL:</span>
-                    <input
-                      type="url"
-                      value={profilePic}
-                      onChange={(e) => setProfilePic(e.target.value)}
-                      placeholder="https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/..."
-                      required
-                      className="w-full px-3 py-2 text-xs font-mono text-slate-800 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    />
-                  </div>
-
-                  <span className="text-[11px] font-bold text-slate-600">Choose Avatar / Select File:</span>
-                  <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                    {DEFAULT_GIT_PROFILE_PICS.concat(FALLBACK_AVATARS).slice(0, 5).map((url, idx) => (
-                      <img
-                        key={idx}
-                        src={url}
-                        alt={`Preset ${idx + 1}`}
-                        onClick={() => setProfilePic(url)}
-                        className={`w-8 h-8 rounded-lg object-cover cursor-pointer border-2 transition-all ${
-                          profilePic === url ? 'border-blue-600 scale-110 shadow-xs' : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  <label className="w-fit px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition-colors">
-                    <Upload className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Select Image File</span>
-                    <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                  </label>
-                </div>
-              </div>
-            </div>
+            {/* Avatar Selector (Male 5 & Female 5) */}
+            <AvatarPicker
+              selectedUrl={profilePic}
+              onSelectAvatar={(url) => setProfilePic(url)}
+            />
 
             {/* Grid 2 Columns: User Name & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
