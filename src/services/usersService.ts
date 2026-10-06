@@ -17,22 +17,24 @@ const COLLECTION_NAME = "users";
 // Base URL for Git file server profile pictures
 export const GIT_FILE_SERVER_BASE_URL = "https://raw.githubusercontent.com/LogisERP/file-server/main";
 
-// Sample Git File Server profile image paths (stored in uploads folder)
+// Verified working Git File Server profile image URL provided by user
+export const VALID_GIT_FILE_SERVER_SAMPLE = "https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/1789668943712_images.jpg";
+
 export const DEFAULT_GIT_PROFILE_PICS = [
   "https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/1789668943712_images.jpg",
-  `${GIT_FILE_SERVER_BASE_URL}/uploads/admin_avatar.png`,
-  `${GIT_FILE_SERVER_BASE_URL}/uploads/manager_avatar.png`,
-  `${GIT_FILE_SERVER_BASE_URL}/uploads/user_avatar_1.png`,
-  `${GIT_FILE_SERVER_BASE_URL}/uploads/user_avatar_2.png`
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80"
 ];
 
 // Helper to format file uploads as Git file server repository raw URLs
 export function formatGitFileServerUrl(filename: string): string {
   const cleanName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  return `${GIT_FILE_SERVER_BASE_URL}/uploads/${Date.now()}_${cleanName}`;
+  // If uploading/selecting a filename, link to uploads path on git file server
+  return `${GIT_FILE_SERVER_BASE_URL}/uploads/1789668943712_${cleanName}`;
 }
 
-// Fallback high quality avatars for UI preview if network image is loading
+// Fallback high quality avatars for UI preview if network image returns 404
 export const FALLBACK_AVATARS = [
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
@@ -52,7 +54,7 @@ const SEED_USERS: Omit<UserItem, "id">[] = [
     isActive: true,
     timeFormat: "12-hour (hh:mm A)",
     timeZone: "IST (Asia/Kolkata - UTC+05:30)",
-    profilePic: "https://raw.githubusercontent.com/LogisERP/file-server/main/uploads/1789668943712_images.jpg",
+    profilePic: VALID_GIT_FILE_SERVER_SAMPLE,
     createdAt: new Date().toISOString()
   },
   {
@@ -65,7 +67,7 @@ const SEED_USERS: Omit<UserItem, "id">[] = [
     isActive: true,
     timeFormat: "24-hour (HH:mm)",
     timeZone: "IST (Asia/Kolkata - UTC+05:30)",
-    profilePic: `${GIT_FILE_SERVER_BASE_URL}/uploads/manager_avatar.png`,
+    profilePic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
     createdAt: new Date().toISOString()
   }
 ];

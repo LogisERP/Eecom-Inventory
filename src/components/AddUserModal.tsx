@@ -249,7 +249,9 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                     src={profilePic}
                     alt="Profile Preview"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = FALLBACK_AVATARS[0];
+                      const img = e.target as HTMLImageElement;
+                      img.onerror = null;
+                      img.src = FALLBACK_AVATARS[0];
                     }}
                     className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md bg-slate-200"
                   />

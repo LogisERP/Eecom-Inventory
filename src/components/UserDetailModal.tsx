@@ -73,7 +73,9 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
               src={user.profilePic}
               alt={user.userName}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = FALLBACK_AVATARS[0];
+                const img = e.target as HTMLImageElement;
+                img.onerror = null;
+                img.src = FALLBACK_AVATARS[0];
               }}
               className="w-16 h-16 rounded-2xl object-cover border-2 border-blue-400/40 shadow-lg bg-slate-800 shrink-0"
             />

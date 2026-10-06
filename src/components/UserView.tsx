@@ -204,7 +204,9 @@ export const UserView: React.FC = () => {
                             src={u.profilePic}
                             alt={u.userName}
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = FALLBACK_AVATARS[0];
+                              const img = e.target as HTMLImageElement;
+                              img.onerror = null;
+                              img.src = FALLBACK_AVATARS[0];
                             }}
                             className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />
