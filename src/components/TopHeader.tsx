@@ -116,11 +116,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
               </div>
 
-              <div className="flex flex-col justify-center min-w-0 max-w-[140px] py-0.5">
-                <span className="text-xs font-extrabold text-slate-900 leading-snug truncate group-hover:text-blue-600 transition-colors">
+              <div className="flex flex-col justify-center items-center text-center min-w-0 max-w-[140px] py-0.5">
+                <span className="text-xs font-extrabold text-slate-900 leading-snug truncate w-full group-hover:text-blue-600 transition-colors text-center">
                   {currentUser?.userName || 'Varatharajan R'}
                 </span>
-                <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center gap-1 truncate mt-0.5">
+                <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center justify-center gap-1 truncate mt-0.5 w-full text-center">
                   <Shield className="w-2.5 h-2.5 text-blue-500 shrink-0" />
                   {currentUser?.roleName || 'Administrator'}
                 </span>
