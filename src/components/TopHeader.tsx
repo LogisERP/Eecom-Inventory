@@ -1,11 +1,15 @@
 import React from 'react';
-import { Search, Bell, MessageSquare, Menu } from 'lucide-react';
+import { Search, Bell, MessageSquare, Menu, LogOut, Shield } from 'lucide-react';
+import type { UserItem } from '../types/people';
+import { DEFAULT_AVATAR } from '../utils/avatars';
 
 interface TopHeaderProps {
   title: string;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onOpenMobileMenu: () => void;
+  currentUser: UserItem | null;
+  onLogout: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -13,7 +17,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   searchQuery,
   setSearchQuery,
   onOpenMobileMenu,
+  currentUser,
+  onLogout,
 }) => {
+  const avatarUrl = currentUser?.profilePic || DEFAULT_AVATAR;
+
   return (
     <header className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-6 pb-4 mb-4 border-b border-slate-200/70">
 
@@ -34,14 +42,23 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
         {/* Mobile quick profile icon */}
         <div className="sm:hidden flex items-center gap-2">
-          <button className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-            <Bell className="w-4 h-4 text-slate-600" />
-          </button>
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
-            alt="John Smith"
+            src={avatarUrl}
+            alt={currentUser?.userName || 'User'}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.onerror = null;
+              img.src = DEFAULT_AVATAR;
+            }}
             className="w-8 h-8 rounded-full object-cover border border-slate-200"
           />
+          <button
+            onClick={onLogout}
+            className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
@@ -71,17 +88,35 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             <MessageSquare className="w-4 h-4 text-slate-600" />
           </button>
 
-          {/* User profile */}
-          <div className="flex items-center gap-2.5 bg-white rounded-full pl-1 pr-3 py-1 border border-slate-200/80 cursor-pointer hover:shadow-sm transition-all">
+          {/* User Profile Card */}
+          <div className="flex items-center gap-2.5 bg-white rounded-full pl-1 pr-3 py-1 border border-slate-200/80 hover:shadow-sm transition-all">
             <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
-              alt="John Smith"
-              className="w-8 h-8 rounded-full object-cover"
+              src={avatarUrl}
+              alt={currentUser?.userName || 'User'}
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.onerror = null;
+                img.src = DEFAULT_AVATAR;
+              }}
+              className="w-8 h-8 rounded-full object-cover border border-slate-200"
             />
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-slate-800 leading-tight">Hey, John Smith</span>
-              <span className="text-[10px] text-slate-400 font-medium leading-tight">johnsmith243@gmail.com</span>
+            <div className="flex flex-col min-w-0 max-w-[140px]">
+              <span className="text-xs font-extrabold text-slate-800 leading-tight truncate">
+                {currentUser?.userName || 'Varatharajan R'}
+              </span>
+              <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center gap-1">
+                <Shield className="w-2.5 h-2.5" />
+                {currentUser?.roleName || 'Administrator'}
+              </span>
             </div>
+
+            <button
+              onClick={onLogout}
+              className="ml-1 p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              title="Logout User"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -89,3 +124,4 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     </header>
   );
 };
+

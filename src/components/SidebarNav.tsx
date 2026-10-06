@@ -13,12 +13,15 @@ import {
   Shield,
   Users
 } from 'lucide-react';
+import type { UserItem } from '../types/people';
 
 interface SidebarNavProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onOpenAiModal: () => void;
   onCloseMobile?: () => void;
+  currentUser?: UserItem | null;
+  onLogout?: () => void;
 }
 
 const NAV_ITEMS = [
@@ -39,6 +42,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   setActiveTab,
   onOpenAiModal,
   onCloseMobile,
+  onLogout
 }) => {
   const handleSelectTab = (tab: string) => {
     setActiveTab(tab);
@@ -144,8 +148,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </button>
 
           <button
-            onClick={() => alert('Logged out.')}
-            className="w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 text-slate-400 hover:text-rose-400 hover:bg-white/5 transition-all"
+            onClick={() => {
+              if (onLogout) onLogout();
+            }}
+            className="w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 text-slate-400 hover:text-rose-400 hover:bg-white/5 transition-all cursor-pointer"
           >
             <LogOut className="w-[18px] h-[18px]" />
             Logout
@@ -181,3 +187,4 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     </aside>
   );
 };
+

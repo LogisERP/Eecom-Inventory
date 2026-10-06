@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { FULL_INVENTORY, type ProductItem } from './data/mockData';
+import type { UserItem } from './types/people';
+import { getStoredAuthUser, logoutUser } from './services/authService';
+import { LoginPage } from './components/LoginPage';
 import { SidebarNav } from './components/SidebarNav';
 import { TopHeader } from './components/TopHeader';
 import { DashboardView } from './components/DashboardView';
@@ -14,6 +17,7 @@ import { AddProductModal } from './components/AddProductModal';
 import { AiAssistantModal } from './components/AiAssistantModal';
 
 export function App() {
+  const [currentUser, setCurrentUser] = useState<UserItem | null>(() => getStoredAuthUser());
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [products, setProducts] = useState<ProductItem[]>(FULL_INVENTORY);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -23,6 +27,15 @@ export function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  const handleLogout = () => {
+    logoutUser();
+    setCurrentUser(null);
+  };
+
+  if (!currentUser) {
+    return <LoginPage onLoginSuccess={(user) => setCurrentUser(user)} />;
+  }
 
   const getPageTitle = () => {
     switch (activeTab) {
@@ -58,6 +71,8 @@ export function App() {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           onOpenAiModal={() => setIsAiModalOpen(true)}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
       </div>
 
@@ -77,6 +92,8 @@ export function App() {
               setActiveTab={setActiveTab}
               onOpenAiModal={() => setIsAiModalOpen(true)}
               onCloseMobile={() => setIsMobileMenuOpen(false)}
+              currentUser={currentUser}
+              onLogout={handleLogout}
             />
           </div>
         </div>
@@ -92,6 +109,8 @@ export function App() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+            currentUser={currentUser}
+            onLogout={handleLogout}
           />
         </div>
 
