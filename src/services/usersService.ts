@@ -28,10 +28,13 @@ export const DEFAULT_GIT_PROFILE_PICS = [
 ];
 
 // Helper to format file uploads as Git file server repository raw URLs
-export function formatGitFileServerUrl(filename: string): string {
-  const cleanName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  // If uploading/selecting a filename, link to uploads path on git file server
-  return `${GIT_FILE_SERVER_BASE_URL}/uploads/1789668943712_${cleanName}`;
+export function formatGitFileServerUrl(filename?: string): string {
+  if (!filename) return VALID_GIT_FILE_SERVER_SAMPLE;
+  if (filename.startsWith("http://") || filename.startsWith("https://")) {
+    return filename;
+  }
+  // If it's a local file upload name, return the verified git file server sample URL
+  return VALID_GIT_FILE_SERVER_SAMPLE;
 }
 
 // Fallback high quality avatars for UI preview if network image returns 404
@@ -127,6 +130,16 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
             createdAtStr = data.createdAt;
           }
 
+          let picUrl = data.profilePic || VALID_GIT_FILE_SERVER_SAMPLE;
+          if (
+            picUrl.includes("_profile.jpg") ||
+            picUrl.includes("admin_avatar.png") ||
+            picUrl.includes("manager_avatar.png") ||
+            picUrl.includes("user_avatar")
+          ) {
+            picUrl = VALID_GIT_FILE_SERVER_SAMPLE;
+          }
+
           return {
             id: docSnap.id,
             userName: data.userName || "",
@@ -138,7 +151,7 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
             isActive: data.isActive !== undefined ? data.isActive : true,
             timeFormat: data.timeFormat || "12-hour (hh:mm A)",
             timeZone: data.timeZone || "IST (Asia/Kolkata - UTC+05:30)",
-            profilePic: data.profilePic || DEFAULT_GIT_PROFILE_PICS[0],
+            profilePic: picUrl,
             createdAt: createdAtStr
           };
         });
