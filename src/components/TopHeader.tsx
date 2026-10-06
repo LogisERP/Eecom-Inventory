@@ -100,7 +100,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <div className="relative">
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2.5 bg-white rounded-full pl-1.5 pr-3.5 py-1.5 border border-slate-200/90 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-xs"
+              className="flex items-center gap-3 bg-white rounded-full pl-1.5 pr-4 py-1.5 border border-slate-200/90 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-xs"
             >
               <div className="relative shrink-0">
                 <img
@@ -111,13 +111,13 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                     img.onerror = null;
                     img.src = DEFAULT_AVATAR;
                   }}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-inner group-hover:scale-105 transition-transform"
+                  className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-inner group-hover:scale-105 transition-transform"
                 />
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
               </div>
 
-              <div className="flex flex-col min-w-0 max-w-[140px]">
-                <span className="text-xs font-extrabold text-slate-900 leading-tight truncate group-hover:text-blue-600 transition-colors">
+              <div className="flex flex-col justify-center min-w-0 max-w-[140px] py-0.5">
+                <span className="text-xs font-extrabold text-slate-900 leading-snug truncate group-hover:text-blue-600 transition-colors">
                   {currentUser?.userName || 'Varatharajan R'}
                 </span>
                 <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center gap-1 truncate mt-0.5">
@@ -126,7 +126,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 </span>
               </div>
 
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180 text-blue-600' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform ml-0.5 ${isDropdownOpen ? 'rotate-180 text-blue-600' : ''}`} />
             </div>
 
             {/* Dropdown Menu */}
