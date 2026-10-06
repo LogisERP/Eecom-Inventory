@@ -42,6 +42,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   setActiveTab,
   onOpenAiModal,
   onCloseMobile,
+  currentUser,
   onLogout
 }) => {
   const handleSelectTab = (tab: string) => {
@@ -50,6 +51,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       onCloseMobile();
     }
   };
+
+  const roleName = (currentUser?.roleName || '').trim().toLowerCase();
+  // Check if role is Admin/Administrator. If no role defined, default to true.
+  const isAdmin = !currentUser?.roleName || roleName.includes('admin');
 
   return (
     <aside className="flex flex-col justify-between bg-[#141c25] text-slate-300 w-full md:w-[240px] md:min-w-[240px] h-full overflow-y-auto shrink-0">
@@ -76,59 +81,64 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           )}
         </div>
 
-        {/* Menu */}
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-3 mb-1">
-            Menu
-          </span>
+        {/* Role-based Menu Items: If Admin show alls, if others show Tools only */}
+        {isAdmin ? (
+          <>
+            {/* Admin Menu Section */}
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-3 mb-1">
+                Admin
+              </span>
 
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleSelectTab(item.id)}
-                className={`w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 transition-all ${
-                  active
-                    ? 'bg-[#1e3a5f] text-white'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <Icon className="w-[18px] h-[18px]" />
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
+              {NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const active = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSelectTab(item.id)}
+                    className={`w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 transition-all ${
+                      active
+                        ? 'bg-[#1e3a5f] text-white'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px]" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
 
-        {/* People Menu Group */}
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-3 mb-1">
-            People
-          </span>
+            {/* People Menu Group */}
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-3 mb-1">
+                People
+              </span>
 
-          {PEOPLE_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleSelectTab(item.id)}
-                className={`w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 transition-all ${
-                  active
-                    ? 'bg-[#1e3a5f] text-white'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <Icon className="w-[18px] h-[18px]" />
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
+              {PEOPLE_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const active = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSelectTab(item.id)}
+                    className={`w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 transition-all ${
+                      active
+                        ? 'bg-[#1e3a5f] text-white'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px]" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        ) : null}
 
-        {/* Tools */}
+        {/* Tools Section (Visible to Everyone) */}
         <div className="flex flex-col gap-0.5">
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-3 mb-1">
             Tools

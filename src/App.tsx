@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FULL_INVENTORY, type ProductItem } from './data/mockData';
 import type { UserItem } from './types/people';
 import { getStoredAuthUser, logoutUser } from './services/authService';
@@ -15,6 +15,7 @@ import { UserView } from './components/UserView';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { AddProductModal } from './components/AddProductModal';
 import { AiAssistantModal } from './components/AiAssistantModal';
+import { EditProfileModal } from './components/EditProfileModal';
 
 export function App() {
   const [currentUser, setCurrentUser] = useState<UserItem | null>(() => getStoredAuthUser());
@@ -26,7 +27,19 @@ export function App() {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  // Role check: Admin vs non-admin (others)
+  const roleName = (currentUser?.roleName || '').trim().toLowerCase();
+  const isAdmin = !currentUser?.roleName || roleName.includes('admin');
+
+  // If non-admin user logs in, restrict navigation to Tools ('settings')
+  useEffect(() => {
+    if (currentUser && !isAdmin && activeTab !== 'settings') {
+      setActiveTab('settings');
+    }
+  }, [currentUser, isAdmin, activeTab]);
 
   const handleLogout = () => {
     logoutUser();
@@ -47,7 +60,7 @@ export function App() {
       case 'user': return 'User Management';
       case 'reports': return 'Financial Reports';
       case 'settings': return 'Account & Store Settings';
-      default: return 'My Dashboard';
+      default: return 'Account & Store Settings';
     }
   };
 
@@ -111,19 +124,20 @@ export function App() {
             onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
             currentUser={currentUser}
             onLogout={handleLogout}
+            onOpenProfile={() => setIsProfileModalOpen(true)}
           />
         </div>
 
         {/* Scrollable content */}
         <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-4">
-          {activeTab === 'dashboard' && (
+          {isAdmin && activeTab === 'dashboard' && (
             <DashboardView
               onSelectProduct={(prod) => setSelectedProduct(prod)}
               onFilterStatus={handleFilterStatus}
             />
           )}
 
-          {activeTab === 'inventory' && (
+          {isAdmin && activeTab === 'inventory' && (
             <InventoryView
               products={products}
               activeStatusFilter={inventoryStatusFilter}
@@ -133,11 +147,11 @@ export function App() {
             />
           )}
 
-          {activeTab === 'orders' && <OrdersView />}
-          {activeTab === 'marketplace' && <MarketplaceView />}
-          {activeTab === 'role' && <RoleView />}
-          {activeTab === 'user' && <UserView />}
-          {activeTab === 'reports' && <ReportsView />}
+          {isAdmin && activeTab === 'orders' && <OrdersView />}
+          {isAdmin && activeTab === 'marketplace' && <MarketplaceView />}
+          {isAdmin && activeTab === 'role' && <RoleView />}
+          {isAdmin && activeTab === 'user' && <UserView />}
+          {isAdmin && activeTab === 'reports' && <ReportsView />}
 
           {activeTab === 'settings' && (
             <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm mt-2 sm:mt-4">
@@ -156,6 +170,14 @@ export function App() {
       <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       <AddProductModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAddProduct={handleAddProduct} />
       <AiAssistantModal isOpen={isAiModalOpen} onClose={() => setIsAiModalOpen(false)} />
+      {currentUser && (
+        <EditProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          currentUser={currentUser}
+          onProfileUpdated={(updated) => setCurrentUser(updated)}
+        />
+      )}
     </div>
   );
 }
