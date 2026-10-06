@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Home,
   LayoutDashboard,
   Package,
   ShoppingBag,
@@ -80,6 +81,19 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </button>
           )}
         </div>
+
+        {/* Direct Standalone Home Menu Item (Top of App items, not under any menu group) */}
+        <button
+          onClick={() => handleSelectTab('home')}
+          className={`w-full px-3 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-3 transition-all ${
+            activeTab === 'home'
+              ? 'bg-[#1e3a5f] text-white shadow-xs'
+              : 'text-slate-300 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Home className="w-[18px] h-[18px] text-blue-400" />
+          <span>Home</span>
+        </button>
 
         {/* Role-based Menu Items: If Admin show alls, if others show Tools only */}
         {isAdmin ? (

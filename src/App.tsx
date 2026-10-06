@@ -17,10 +17,11 @@ import { ProductDetailModal } from './components/ProductDetailModal';
 import { AddProductModal } from './components/AddProductModal';
 import { AiAssistantModal } from './components/AiAssistantModal';
 import { EditProfileModal } from './components/EditProfileModal';
+import { HomeView } from './components/HomeView';
 
 export function App() {
   const [currentUser, setCurrentUser] = useState<UserItem | null>(() => getStoredAuthUser());
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [activeTab, setActiveTab] = useState<string>('home');
   const [products, setProducts] = useState<ProductItem[]>(FULL_INVENTORY);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [inventoryStatusFilter, setInventoryStatusFilter] = useState<string>('All');
@@ -71,10 +72,10 @@ export function App() {
   const roleName = (currentUser?.roleName || '').trim().toLowerCase();
   const isAdmin = !currentUser?.roleName || roleName.includes('admin');
 
-  // If non-admin user logs in, restrict navigation to Tools ('settings')
+  // Allow non-admin users to access Home and Settings
   useEffect(() => {
-    if (currentUser && !isAdmin && activeTab !== 'settings') {
-      setActiveTab('settings');
+    if (currentUser && !isAdmin && activeTab !== 'settings' && activeTab !== 'home') {
+      setActiveTab('home');
     }
   }, [currentUser, isAdmin, activeTab]);
 
@@ -84,11 +85,15 @@ export function App() {
   };
 
   if (!currentUser) {
-    return <LoginPage onLoginSuccess={(user) => setCurrentUser(user)} />;
+    return <LoginPage onLoginSuccess={(user) => {
+      setCurrentUser(user);
+      setActiveTab('home');
+    }} />;
   }
 
   const getPageTitle = () => {
     switch (activeTab) {
+      case 'home': return 'Welcome to Ecom ERP';
       case 'dashboard': return 'My Dashboard';
       case 'inventory': return 'Inventory Catalog';
       case 'orders': return 'Customer Orders';
@@ -97,7 +102,7 @@ export function App() {
       case 'user': return 'User Management';
       case 'reports': return 'Financial Reports';
       case 'settings': return 'Account & Store Settings';
-      default: return 'Account & Store Settings';
+      default: return 'Welcome to Ecom ERP';
     }
   };
 
@@ -167,6 +172,13 @@ export function App() {
 
         {/* Scrollable content */}
         <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-4">
+          {activeTab === 'home' && (
+            <HomeView
+              currentUser={currentUser}
+              onNavigate={(tab) => setActiveTab(tab)}
+            />
+          )}
+
           {isAdmin && activeTab === 'dashboard' && (
             <DashboardView
               onSelectProduct={(prod) => setSelectedProduct(prod)}
