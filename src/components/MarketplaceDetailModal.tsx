@@ -101,7 +101,7 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
           )}
 
           {/* Details list */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
                 <Globe className="w-3.5 h-3.5 text-blue-500" />
@@ -121,6 +121,16 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
                 {marketplace.marketplaceId}
               </p>
             </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
+                <FileText className="w-3.5 h-3.5 text-purple-500" />
+                Created By
+              </span>
+              <p className="text-xs font-mono font-extrabold text-purple-700">
+                {marketplace.createdBy || 'USR-1001'}
+              </p>
+            </div>
           </div>
 
           {/* Notes Section */}
@@ -134,12 +144,17 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
             </div>
           </div>
 
-          {marketplace.createdAt && (
-            <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              Created: {new Date(marketplace.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-            </div>
-          )}
+          <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+            {marketplace.createdAt && (
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                Created: {new Date(marketplace.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+            <span className="font-mono text-purple-600 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 font-bold">
+              By {marketplace.createdBy || 'USR-1001'}
+            </span>
+          </div>
 
           {/* Delete Confirmation Box if triggered */}
           {showConfirmDelete ? (

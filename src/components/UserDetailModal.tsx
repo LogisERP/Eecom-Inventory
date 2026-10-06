@@ -87,6 +87,9 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
               <p className="text-xs text-slate-300 font-medium truncate">{user.email}</p>
               
               <div className="flex items-center gap-2 mt-2">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-400/30">
+                  {user.userId || 'USR-1001'}
+                </span>
                 <span className="text-[10px] font-extrabold uppercase bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-400/30">
                   {user.roleName}
                 </span>

@@ -82,6 +82,7 @@ export async function authenticateUser(phoneInput: string, passwordInput: string
 
     const authenticatedUser: UserItem = {
       id: matchedDoc.id,
+      userId: userData.userId || "USR-1001",
       userName: userData.userName || "User",
       email: userData.email || "",
       phoneNumber: userData.phoneNumber || formattedPhone,

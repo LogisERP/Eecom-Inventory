@@ -20,24 +20,28 @@ const SEED_MARKETPLACES: Omit<MarketplaceItem, "id">[] = [
     salesChannel: "Amazon US Store",
     marketplaceId: "MKT-80101",
     notes: "Primary North American retail channel. Automated FBA fulfillment sync enabled with 2-hour inventory refresh interval.",
+    createdBy: "USR-1001",
     createdAt: new Date().toISOString()
   },
   {
     salesChannel: "Shopify Direct Web",
     marketplaceId: "MKT-80102",
     notes: "Official brand storefront. Integrated with Stripe payment gateway and custom order tracking webhooks.",
+    createdBy: "USR-1001",
     createdAt: new Date().toISOString()
   },
   {
     salesChannel: "Walmart Marketplace",
     marketplaceId: "MKT-80103",
     notes: "Secondary US online marketplace. Requires specific GTIN and UPC code sync for high-volume jewelry and apparel.",
+    createdBy: "USR-1002",
     createdAt: new Date().toISOString()
   },
   {
     salesChannel: "eBay Global Outlet",
     marketplaceId: "MKT-80104",
     notes: "International refurb & overstock auction channel with multi-currency pricing support.",
+    createdBy: "USR-1001",
     createdAt: new Date().toISOString()
   }
 ];
@@ -115,6 +119,7 @@ export function subscribeMarketplaces(onData: (items: MarketplaceItem[]) => void
             salesChannel: data.salesChannel || "",
             marketplaceId: data.marketplaceId || "",
             notes: data.notes || "",
+            createdBy: data.createdBy || "USR-1001",
             createdAt: createdAtStr
           };
         });
@@ -141,6 +146,7 @@ export async function addMarketplaceToDb(item: Omit<MarketplaceItem, "id" | "cre
     salesChannel: item.salesChannel.trim(),
     marketplaceId: item.marketplaceId.trim(),
     notes: item.notes.trim(),
+    createdBy: item.createdBy ? item.createdBy.trim() : "USR-1001",
     createdAt: serverTimestamp()
   });
   return docRef.id;
@@ -161,9 +167,11 @@ export async function deleteMarketplaceFromDb(id: string): Promise<void> {
 export async function updateMarketplaceInDb(id: string, item: Partial<MarketplaceItem>): Promise<void> {
   if (!id) throw new Error("Document ID is required for update");
   const docRef = doc(db, COLLECTION_NAME, id);
-  await updateDoc(docRef, {
-    salesChannel: item.salesChannel?.trim(),
-    marketplaceId: item.marketplaceId?.trim(),
-    notes: item.notes?.trim()
-  });
+  const updateData: any = {};
+  if (item.salesChannel !== undefined) updateData.salesChannel = item.salesChannel.trim();
+  if (item.marketplaceId !== undefined) updateData.marketplaceId = item.marketplaceId.trim();
+  if (item.notes !== undefined) updateData.notes = item.notes.trim();
+  if (item.createdBy !== undefined) updateData.createdBy = item.createdBy.trim();
+
+  await updateDoc(docRef, updateData);
 }

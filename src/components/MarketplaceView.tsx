@@ -75,6 +75,7 @@ export const MarketplaceView: React.FC = () => {
     return (
       mkt.salesChannel.toLowerCase().includes(q) ||
       mkt.marketplaceId.toLowerCase().includes(q) ||
+      (mkt.createdBy && mkt.createdBy.toLowerCase().includes(q)) ||
       mkt.notes.toLowerCase().includes(q)
     );
   });
@@ -209,6 +210,7 @@ export const MarketplaceView: React.FC = () => {
                 <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
                   <th className="py-3.5 px-5">Sales Channel (Primary Column)</th>
                   <th className="py-3.5 px-4">Marketplace ID</th>
+                  <th className="py-3.5 px-4">Created By</th>
                   <th className="py-3.5 px-4">Notes</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
@@ -247,6 +249,13 @@ export const MarketplaceView: React.FC = () => {
                       <td className="py-4 px-4 whitespace-nowrap">
                         <span className="font-mono font-bold text-slate-800 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-lg text-xs tracking-wide">
                           {mkt.marketplaceId}
+                        </span>
+                      </td>
+
+                      {/* Created By (User ID) */}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md text-xs">
+                          {mkt.createdBy || 'USR-1001'}
                         </span>
                       </td>
 

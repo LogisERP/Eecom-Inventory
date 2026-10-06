@@ -212,12 +212,17 @@ export const UserView: React.FC = () => {
                             className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />
                           <div>
-                            <span
-                              onClick={() => setSelectedUser(u)}
-                              className="font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer transition-colors block text-sm"
-                            >
-                              {u.userName}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                onClick={() => setSelectedUser(u)}
+                                className="font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer transition-colors block text-sm"
+                              >
+                                {u.userName}
+                              </span>
+                              <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+                                {u.userId || 'USR-1001'}
+                              </span>
+                            </div>
                             <span className="text-[11px] text-slate-500 font-medium">{u.timeZone.split(' ')[0]}</span>
                           </div>
                         </div>

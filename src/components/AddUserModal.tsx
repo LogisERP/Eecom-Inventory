@@ -14,14 +14,17 @@ import {
   ToggleLeft,
   ToggleRight,
   Eye,
-  EyeOff
+  EyeOff,
+  Sparkles,
+  RefreshCw
 } from 'lucide-react';
 import type { UserItem, RoleItem } from '../types/people';
 import {
   validateEmail,
   validatePhone10Digits,
   isEmailUnique,
-  addUserToDb
+  addUserToDb,
+  generateUserId
 } from '../services/usersService';
 import { DEFAULT_AVATAR } from '../utils/avatars';
 import { RoleLookupModal } from './RoleLookupModal';
@@ -52,6 +55,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   existingUsers,
   availableRoles
 }) => {
+  const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneDigits, setPhoneDigits] = useState('');
@@ -74,6 +78,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      const generated = generateUserId(existingUsers);
+      setUserId(generated);
       setUserName('');
       setEmail('');
       setPhoneDigits('');
@@ -92,21 +98,31 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       setIsSubmitting(false);
       setIsSuccess(false);
     }
-  }, [isOpen, availableRoles]);
+  }, [isOpen, availableRoles, existingUsers]);
 
   if (!isOpen) return null;
+
+  const handleRegenerateUserId = () => {
+    setUserId(generateUserId(existingUsers));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
-    // Validation 1: User Name
+    // Validation 1: User ID
+    if (!userId.trim()) {
+      setErrorMsg('User ID is mandatory.');
+      return;
+    }
+
+    // Validation 2: User Name
     if (!userName.trim()) {
       setErrorMsg('User Name is mandatory.');
       return;
     }
 
-    // Validation 2: Email format & uniqueness
+    // Validation 3: Email format & uniqueness
     if (!email.trim()) {
       setErrorMsg('Email is mandatory.');
       return;
@@ -120,7 +136,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       return;
     }
 
-    // Validation 3: 10 digit Phone number
+    // Validation 4: 10 digit Phone number
     if (!phoneDigits.trim()) {
       setErrorMsg('Phone Number is mandatory.');
       return;
@@ -130,19 +146,19 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       return;
     }
 
-    // Validation 4: Password
+    // Validation 5: Password
     if (!password) {
       setErrorMsg('Password is mandatory.');
       return;
     }
 
-    // Validation 5: Role lookup
+    // Validation 6: Role lookup
     if (!selectedRole) {
       setErrorMsg('Please select a Role for the user using the Lookup button.');
       return;
     }
 
-    // Validation 6: Profile Avatar
+    // Validation 7: Profile Avatar
     if (!profilePic) {
       setErrorMsg('Profile avatar is mandatory. Please select an avatar.');
       return;
@@ -153,6 +169,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     try {
       setIsSubmitting(true);
       await addUserToDb({
+        userId: userId.trim(),
         userName: userName.trim(),
         email: email.trim().toLowerCase(),
         phoneNumber: formattedPhone,
@@ -190,7 +207,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               </div>
               <div>
                 <h3 className="text-base font-bold tracking-tight text-white">Create New User</h3>
-                <p className="text-xs text-slate-400 font-medium">Add user profile, role lookup, and avatar selection</p>
+                <p className="text-xs text-slate-400 font-medium">Add user profile, autonumber user ID, role lookup, and avatar</p>
               </div>
             </div>
             <button
@@ -223,6 +240,34 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               selectedUrl={profilePic}
               onSelectAvatar={(url) => setProfilePic(url)}
             />
+
+            {/* User ID (Autonumber Unique) Field */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>User ID <span className="text-rose-500">*</span></span>
+                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Autonumber Unique</span>
+              </label>
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={userId}
+                    readOnly
+                    className="w-full px-3.5 py-2.5 text-xs font-mono font-extrabold text-slate-800 bg-slate-100 border border-slate-300 rounded-xl focus:outline-none cursor-not-allowed select-all"
+                  />
+                  <Sparkles className="w-4 h-4 text-amber-500 absolute right-3 top-3 pointer-events-none" />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRegenerateUserId}
+                  title="Regenerate User ID"
+                  className="px-3 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center gap-1.5 shrink-0 transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+                  <span className="hidden sm:inline">Regenerate</span>
+                </button>
+              </div>
+            </div>
 
             {/* Grid 2 Columns: User Name & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

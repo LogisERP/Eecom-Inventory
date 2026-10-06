@@ -26,11 +26,14 @@ export const EditMarketplaceModal: React.FC<EditMarketplaceModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [createdBy, setCreatedBy] = useState('USR-1001');
+
   useEffect(() => {
     if (isOpen && marketplace) {
       setSalesChannel(marketplace.salesChannel || '');
       setMarketplaceId(marketplace.marketplaceId || '');
       setNotes(marketplace.notes || '');
+      setCreatedBy(marketplace.createdBy || 'USR-1001');
       setErrorMsg(null);
       setIsSubmitting(false);
       setIsSuccess(false);
@@ -66,7 +69,8 @@ export const EditMarketplaceModal: React.FC<EditMarketplaceModalProps> = ({
       await updateMarketplaceInDb(marketplace.id, {
         salesChannel: trimmedChannel,
         marketplaceId: marketplaceId.trim(),
-        notes: notes.trim()
+        notes: notes.trim(),
+        createdBy: createdBy || 'USR-1001'
       });
 
       setIsSuccess(true);
@@ -122,6 +126,35 @@ export const EditMarketplaceModal: React.FC<EditMarketplaceModalProps> = ({
             </div>
           )}
 
+          {/* Grid 2 Columns: Marketplace ID & Created By (User ID) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>Marketplace ID <span className="text-rose-500">*</span></span>
+              </label>
+              <input
+                type="text"
+                value={marketplaceId}
+                onChange={(e) => setMarketplaceId(e.target.value)}
+                required
+                className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>Created By (User ID)</span>
+                <span className="text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">User ID</span>
+              </label>
+              <input
+                type="text"
+                value={createdBy}
+                readOnly
+                className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-slate-800 bg-slate-100 border border-slate-300 rounded-xl cursor-not-allowed select-all"
+              />
+            </div>
+          </div>
+
           {/* Sales Channel Field */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
@@ -138,21 +171,6 @@ export const EditMarketplaceModal: React.FC<EditMarketplaceModalProps> = ({
               placeholder="e.g., Amazon US, Shopify Direct..."
               required
               className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Marketplace ID Field */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
-              <span>Marketplace ID <span className="text-rose-500">*</span></span>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Unique ID</span>
-            </label>
-            <input
-              type="text"
-              value={marketplaceId}
-              onChange={(e) => setMarketplaceId(e.target.value)}
-              required
-              className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 

@@ -57,6 +57,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   availableRoles,
   onSuccess
 }) => {
+  const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneDigits, setPhoneDigits] = useState('');
@@ -77,6 +78,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
 
   useEffect(() => {
     if (isOpen && user) {
+      setUserId(user.userId || 'USR-1001');
       setUserName(user.userName || '');
       setEmail(user.email || '');
       
@@ -151,6 +153,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       if (!user.id) throw new Error("Missing document ID for update");
 
       await updateUserInDb(user.id, {
+        userId: userId.trim(),
         userName: userName.trim(),
         email: email.trim().toLowerCase(),
         phoneNumber: formattedPhone,
@@ -222,6 +225,20 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               selectedUrl={profilePic}
               onSelectAvatar={(url) => setProfilePic(url)}
             />
+
+            {/* User ID Field (Autonumber Code) */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>User ID <span className="text-rose-500">*</span></span>
+                <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Autonumber Code</span>
+              </label>
+              <input
+                type="text"
+                value={userId}
+                readOnly
+                className="w-full px-3.5 py-2.5 text-xs font-mono font-extrabold text-slate-800 bg-slate-100 border border-slate-300 rounded-xl focus:outline-none cursor-not-allowed select-all"
+              />
+            </div>
 
             {/* Grid 2 Columns: User Name & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

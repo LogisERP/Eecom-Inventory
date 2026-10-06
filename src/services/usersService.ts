@@ -16,9 +16,22 @@ import { MALE_AVATARS, FEMALE_AVATARS, DEFAULT_AVATAR } from "../utils/avatars";
 
 const COLLECTION_NAME = "users";
 
+export function generateUserId(existing: UserItem[]): string {
+  let counter = 1001;
+  let code = `USR-${counter}`;
+  const existingCodes = new Set(existing.map(u => (u.userId || '').toUpperCase()));
+
+  while (existingCodes.has(code.toUpperCase())) {
+    counter++;
+    code = `USR-${counter}`;
+  }
+  return code;
+}
+
 // Seed initial users if database is empty
 const SEED_USERS: Omit<UserItem, "id">[] = [
   {
+    userId: "USR-1001",
     userName: "Varatharajan R",
     email: "varathan@retailx.io",
     phoneNumber: "+91 9876543210",
@@ -32,6 +45,7 @@ const SEED_USERS: Omit<UserItem, "id">[] = [
     createdAt: new Date().toISOString()
   },
   {
+    userId: "USR-1002",
     userName: "Priya Sharma",
     email: "priya.sharma@retailx.io",
     phoneNumber: "+91 9123456789",
@@ -92,6 +106,7 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
           return;
         }
 
+        let defaultUserCounter = 1001;
         const items: UserItem[] = snapshot.docs.map((docSnap) => {
           const data = docSnap.data();
           let createdAtStr = new Date().toISOString();
@@ -102,9 +117,11 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
           }
 
           let picUrl = data.profilePic || DEFAULT_AVATAR;
+          const assignedUserId = data.userId || `USR-${defaultUserCounter++}`;
 
           return {
             id: docSnap.id,
+            userId: assignedUserId,
             userName: data.userName || "",
             email: data.email || "",
             phoneNumber: data.phoneNumber || "",
@@ -135,6 +152,7 @@ export function subscribeUsers(onData: (items: UserItem[]) => void, onError?: (e
 
 export async function addUserToDb(item: Omit<UserItem, "id" | "createdAt">): Promise<string> {
   const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+    userId: item.userId.trim(),
     userName: item.userName.trim(),
     email: item.email.trim().toLowerCase(),
     phoneNumber: item.phoneNumber.trim(),
@@ -159,6 +177,7 @@ export async function updateUserInDb(id: string, item: Partial<UserItem>): Promi
   if (!id) throw new Error("Document ID required for update");
   const docRef = doc(db, COLLECTION_NAME, id);
   const updateData: any = {};
+  if (item.userId !== undefined) updateData.userId = item.userId.trim();
   if (item.userName !== undefined) updateData.userName = item.userName.trim();
   if (item.email !== undefined) updateData.email = item.email.trim().toLowerCase();
   if (item.phoneNumber !== undefined) updateData.phoneNumber = item.phoneNumber.trim();
