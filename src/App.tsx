@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FULL_INVENTORY, type ProductItem } from './data/mockData';
 import type { UserItem } from './types/people';
-import { getStoredAuthUser, logoutUser } from './services/authService';
+import { getStoredAuthUser, setStoredAuthUser, logoutUser } from './services/authService';
+import { subscribeUsers } from './services/usersService';
 import { LoginPage } from './components/LoginPage';
 import { SidebarNav } from './components/SidebarNav';
 import { TopHeader } from './components/TopHeader';
@@ -29,6 +30,42 @@ export function App() {
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  // Real-time sync of logged-in user details (including User ID) with Firestore DB
+  useEffect(() => {
+    if (!currentUser) return;
+    const unsubscribe = subscribeUsers((users) => {
+      let matched: UserItem | undefined;
+      if (currentUser.id) {
+        matched = users.find((u) => u.id === currentUser.id);
+      }
+      if (!matched && currentUser.phoneNumber) {
+        const cleanPhone = currentUser.phoneNumber.replace(/\D/g, '');
+        matched = users.find((u) => u.phoneNumber.replace(/\D/g, '').endsWith(cleanPhone));
+      }
+
+      if (matched) {
+        const fresh = matched;
+        setCurrentUser((prev) => {
+          if (!prev) return fresh;
+          if (
+            prev.id !== fresh.id ||
+            prev.userId !== fresh.userId ||
+            prev.userName !== fresh.userName ||
+            prev.email !== fresh.email ||
+            prev.roleName !== fresh.roleName ||
+            prev.profilePic !== fresh.profilePic
+          ) {
+            setStoredAuthUser(fresh);
+            return fresh;
+          }
+          return prev;
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [currentUser?.id, currentUser?.phoneNumber]);
 
   // Role check: Admin vs non-admin (others)
   const roleName = (currentUser?.roleName || '').trim().toLowerCase();

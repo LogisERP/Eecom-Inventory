@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import type { UserItem } from "../types/people";
 import { DEFAULT_AVATAR } from "../utils/avatars";
@@ -80,9 +80,29 @@ export async function authenticateUser(phoneInput: string, passwordInput: string
       createdAtStr = userData.createdAt;
     }
 
+    let finalUserId = userData.userId;
+    if (!finalUserId) {
+      try {
+        const allUsersSnap = await getDocs(usersRef);
+        const existingUserIds = new Set(allUsersSnap.docs.map((d) => ((d.data().userId || '') as string).toUpperCase()));
+        let counter = 1001;
+        let candidate = `USR-${counter}`;
+        while (existingUserIds.has(candidate)) {
+          counter++;
+          candidate = `USR-${counter}`;
+        }
+        finalUserId = candidate;
+        const userDocRef = doc(db, "users", matchedDoc.id);
+        await updateDoc(userDocRef, { userId: finalUserId });
+      } catch (e) {
+        console.warn("Could not write missing userId to Firestore during auth:", e);
+        finalUserId = "USR-1001";
+      }
+    }
+
     const authenticatedUser: UserItem = {
       id: matchedDoc.id,
-      userId: userData.userId || "USR-1001",
+      userId: finalUserId,
       userName: userData.userName || "User",
       email: userData.email || "",
       phoneNumber: userData.phoneNumber || formattedPhone,
