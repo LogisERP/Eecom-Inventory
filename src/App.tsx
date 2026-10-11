@@ -18,6 +18,16 @@ import { AddProductModal } from './components/AddProductModal';
 import { AiAssistantModal } from './components/AiAssistantModal';
 import { EditProfileModal } from './components/EditProfileModal';
 import { HomeView } from './components/HomeView';
+import { FloatingPillNav } from './components/FloatingPillNav';
+
+// Product Details Submenu Views
+import { ProductMasterView } from './components/productDetails/ProductMasterView';
+import { ProductCategoryView } from './components/productDetails/ProductCategoryView';
+import { ProductTypeView } from './components/productDetails/ProductTypeView';
+import { UomView } from './components/productDetails/UomView';
+import { BrandView } from './components/productDetails/BrandView';
+import { SupplierMasterView } from './components/productDetails/SupplierMasterView';
+import { SupplierSiteView } from './components/productDetails/SupplierSiteView';
 
 export function App() {
   const [currentUser, setCurrentUser] = useState<UserItem | null>(() => getStoredAuthUser());
@@ -97,6 +107,13 @@ export function App() {
       case 'dashboard': return 'My Dashboard';
       case 'inventory': return 'Inventory Catalog';
       case 'orders': return 'Customer Orders';
+      case 'product-master': return 'Product Master Directory';
+      case 'product-category': return 'Product Category Hierarchy';
+      case 'product-type': return 'Product Type Specifications';
+      case 'uom': return 'Unit of Measure (UOM) Registry';
+      case 'brand': return 'Brand Management';
+      case 'supplier-master': return 'Supplier Master Directory';
+      case 'supplier-site': return 'Supplier Site Locations';
       case 'marketplace': return 'Marketplace Channels';
       case 'role': return 'Role Management';
       case 'user': return 'User Management';
@@ -170,12 +187,13 @@ export function App() {
           />
         </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-4">
+        {/* Scrollable content with iOS native screen transition */}
+        <div key={activeTab} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-4 animate-fade-in">
           {activeTab === 'home' && (
             <HomeView
               currentUser={currentUser}
               onNavigate={(tab) => setActiveTab(tab)}
+              onSelectProduct={(prod) => setSelectedProduct(prod)}
             />
           )}
 
@@ -197,16 +215,26 @@ export function App() {
           )}
 
           {isAdmin && activeTab === 'orders' && <OrdersView />}
+
+          {/* Product Details Submenus */}
+          {isAdmin && activeTab === 'product-master' && <ProductMasterView />}
+          {isAdmin && activeTab === 'product-category' && <ProductCategoryView />}
+          {isAdmin && activeTab === 'product-type' && <ProductTypeView />}
+          {isAdmin && activeTab === 'uom' && <UomView />}
+          {isAdmin && activeTab === 'brand' && <BrandView />}
+          {isAdmin && activeTab === 'supplier-master' && <SupplierMasterView />}
+          {isAdmin && activeTab === 'supplier-site' && <SupplierSiteView />}
+
           {isAdmin && activeTab === 'marketplace' && <MarketplaceView />}
           {isAdmin && activeTab === 'role' && <RoleView />}
           {isAdmin && activeTab === 'user' && <UserView />}
           {isAdmin && activeTab === 'reports' && <ReportsView />}
 
           {activeTab === 'settings' && (
-            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm mt-2 sm:mt-4">
+            <div className="bg-white p-5 sm:p-6 rounded-[28px] border border-slate-200/80 shadow-sm mt-2 sm:mt-4">
               <h3 className="text-base sm:text-lg font-extrabold text-slate-800">Store Settings & Automation</h3>
               <p className="text-xs text-slate-500 font-medium mt-1">Manage API keys, automated reorder thresholds, and staff access permissions.</p>
-              <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700">
+              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700">
                 ⚡ Automatic AI Reordering Enabled for Low Stock (Threshold: &lt; 50 units)
               </div>
             </div>
@@ -214,6 +242,14 @@ export function App() {
         </div>
 
       </div>
+
+      {/* Floating Pill Navigation Dock (Matched from iOS Travel UI reference) */}
+      <FloatingPillNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenAiModal={() => setIsAiModalOpen(true)}
+        isAdmin={isAdmin}
+      />
 
       {/* Modals */}
       <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />

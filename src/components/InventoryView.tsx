@@ -33,18 +33,22 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col gap-3.5 sm:gap-5 animate-fade-in pb-10">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 animate-fade-in pb-32 pt-2">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-[24px] border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-7 rounded-[32px] border border-slate-200/80 shadow-xs">
         <div>
-          <h2 className="text-base sm:text-xl font-extrabold text-slate-800">Inventory Catalog</h2>
-          <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Manage stock levels, SKUs, and pricing across categories</p>
+          <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-[11px] font-black text-slate-600 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            CATALOG REPOSITORY
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Inventory Catalog</h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Manage stock levels, SKUs, and pricing across categories</p>
         </div>
 
         <button
           onClick={onOpenAddModal}
-          className="py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all self-start sm:self-auto w-full sm:w-auto"
+          className="py-3 px-6 rounded-full bg-[#121316] hover:bg-black text-white font-black text-xs shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95 self-start sm:self-auto w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Add New Product</span>
@@ -52,54 +56,54 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
       </div>
 
       {/* Status Filter Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
         {([
-          { id: 'All', label: 'All Items', count: products.length, activeClass: 'bg-[#19232d] text-white border-slate-800', textClass: 'text-slate-300' },
+          { id: 'All', label: 'All Items', count: products.length, activeClass: 'bg-[#121316] text-white border-black', textClass: 'text-slate-500' },
           { id: 'In Stock', label: 'In Stock', count: 495, activeClass: 'bg-emerald-600 text-white border-emerald-700', textClass: 'text-emerald-600' },
           { id: 'Low Stock', label: 'Low Stock', count: 120, activeClass: 'bg-purple-600 text-white border-purple-700', textClass: 'text-purple-600' },
           { id: 'Out of Stock', label: 'Out of Stock', count: 89, activeClass: 'bg-rose-600 text-white border-rose-700', textClass: 'text-rose-600' },
-          { id: 'Dead Stock', label: 'Dead Stock', count: 20, activeClass: 'bg-slate-700 text-white border-slate-800', textClass: 'text-slate-500' },
+          { id: 'Dead Stock', label: 'Dead Stock', count: 20, activeClass: 'bg-slate-800 text-white border-slate-900', textClass: 'text-slate-500' },
         ]).map((item) => {
           const active = activeStatusFilter === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveStatusFilter(item.id)}
-              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all ${
+              className={`p-4 sm:p-5 rounded-[24px] border text-left transition-all ${
                 active
-                  ? `${item.activeClass} shadow-md`
-                  : 'bg-white text-slate-700 border-slate-200/80 hover:bg-slate-50'
+                  ? `${item.activeClass} shadow-md scale-[1.02]`
+                  : 'bg-white text-slate-800 border-slate-200/90 hover:bg-slate-50 hover:border-slate-300'
               }`}
             >
-              <span className={`text-[10px] sm:text-xs font-semibold block ${active ? 'text-white' : item.textClass}`}>
+              <span className={`text-xs font-bold block ${active ? 'text-white' : item.textClass}`}>
                 {item.label}
               </span>
-              <span className="text-base sm:text-lg font-black mt-0.5 block">{item.count}</span>
+              <span className="text-xl sm:text-2xl font-black mt-1 block">{item.count}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Inventory Table */}
-      <div className="bg-white rounded-2xl sm:rounded-[28px] border border-slate-200/80 shadow-xs overflow-hidden">
-        <div className="p-3 sm:p-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-full border-2 border-slate-300/90 focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-500/15 shadow-xs w-full sm:max-w-xs transition-all">
-            <Search className="w-4 h-4 text-blue-600 shrink-0 font-extrabold" />
+      {/* Inventory Table Card */}
+      <div className="bg-white rounded-[32px] border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-2.5 bg-slate-50 px-4 py-2.5 rounded-full border border-slate-200 focus-within:border-slate-900 focus-within:bg-white focus-within:ring-4 focus-within:ring-slate-900/10 shadow-2xs w-full sm:max-w-sm transition-all">
+            <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[2.5]" />
             <input
               type="text"
               placeholder="Search product or SKU..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-500 placeholder:font-medium w-full"
+              className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-400 w-full"
             />
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-xs font-semibold text-slate-500">Category:</span>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-start">
+            <span className="text-xs font-bold text-slate-400">Category:</span>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-slate-100 border border-slate-200 rounded-full px-3 py-1 text-xs font-bold text-slate-800 outline-none"
+              className="bg-white border border-slate-200 rounded-full px-4 py-2 text-xs font-black text-slate-800 outline-none shadow-2xs"
             >
               <option value="All">All Categories</option>
               <option value="Jewelry">Jewelry</option>
@@ -131,28 +135,28 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                   key={p.id}
                   className="hover:bg-slate-50/80 transition-colors group"
                 >
-                  <td className="py-3 px-4 sm:px-5">
+                  <td className="py-4 px-4 sm:px-6">
                     <div 
                       onClick={() => onSelectProduct(p)}
-                      className="flex items-center gap-2.5 sm:gap-3 cursor-pointer min-w-[140px]"
+                      className="flex items-center gap-3.5 cursor-pointer min-w-[140px]"
                     >
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain bg-slate-50 p-1 border border-slate-200 shrink-0"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl object-contain bg-slate-50 p-1.5 border border-slate-200/80 shrink-0 group-hover:scale-105 transition-transform"
                       />
-                      <span className="font-extrabold text-slate-800 group-hover:text-[#2563eb] transition-colors truncate">
+                      <span className="font-black text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                         {p.name}
                       </span>
                     </div>
                   </td>
-                  <td className="py-3 px-4 sm:px-5 font-mono text-slate-500 font-bold whitespace-nowrap">{p.sku}</td>
-                  <td className="py-3 px-4 sm:px-5 font-semibold text-slate-700 whitespace-nowrap">{p.category}</td>
-                  <td className="py-3 px-4 sm:px-5 font-black text-slate-900 whitespace-nowrap">${p.price.toFixed(2)}</td>
-                  <td className="py-3 px-4 sm:px-5 font-bold text-slate-800 whitespace-nowrap">{p.stockCount} units</td>
-                  <td className="py-3 px-4 sm:px-5 font-extrabold text-emerald-600 whitespace-nowrap">{p.demandTrend}</td>
-                  <td className="py-3 px-4 sm:px-5 whitespace-nowrap">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                  <td className="py-4 px-4 sm:px-6 font-mono text-slate-500 font-bold whitespace-nowrap">{p.sku}</td>
+                  <td className="py-4 px-4 sm:px-6 font-bold text-slate-700 whitespace-nowrap">{p.category}</td>
+                  <td className="py-4 px-4 sm:px-6 font-black text-slate-900 whitespace-nowrap">${p.price.toFixed(2)}</td>
+                  <td className="py-4 px-4 sm:px-6 font-bold text-slate-800 whitespace-nowrap">{p.stockCount} units</td>
+                  <td className="py-4 px-4 sm:px-6 font-extrabold text-emerald-600 whitespace-nowrap">{p.demandTrend}</td>
+                  <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black ${
                       p.status === 'In Stock'
                         ? 'bg-emerald-100 text-emerald-800'
                         : p.status === 'Low Stock'
@@ -164,10 +168,10 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                       {p.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 sm:px-5 text-right whitespace-nowrap">
+                  <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
                     <button
                       onClick={() => onSelectProduct(p)}
-                      className="p-1 rounded-full text-slate-400 hover:text-slate-900 hover:bg-slate-200 transition-colors"
+                      className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#121316] text-slate-600 hover:text-white flex items-center justify-center transition-all ml-auto"
                     >
                       <ArrowUpRight className="w-4 h-4" />
                     </button>

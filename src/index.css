@@ -15,7 +15,7 @@
     width: 100%;
     height: 100%;
     font-family: var(--font-sans);
-    background: #c5ced8;
+    background: #f4f6f9;
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
   }
@@ -35,12 +35,61 @@
 }
 
 @layer utilities {
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes iosSlideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes iosScaleIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes iosSheetUp {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .animate-fade-in {
-    animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: iosSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: iosScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-sheet-up {
+    animation: iosSheetUp 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  /* iOS button tactile touch press feedback */
+  button, [role="button"], a {
+    transition: transform 0.18s cubic-bezier(0.2, 0, 0, 1), opacity 0.18s ease;
+  }
+  button:active, [role="button"]:active {
+    transform: scale(0.96);
+  }
+
+  /* Smooth scroll for native mobile feel */
+  html {
+    scroll-behavior: smooth;
   }
 }

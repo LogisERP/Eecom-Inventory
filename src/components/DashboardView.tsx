@@ -23,44 +23,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<'Fashion' | 'Shoes' | 'Electronics'>('Fashion');
 
   return (
-    <div className="flex flex-col gap-3.5 sm:gap-5 animate-fade-in pt-1 pb-6">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 animate-fade-in pt-2 pb-32">
 
       {/* ───── ROW 1: Sales Revenue + Valuation / Status ───── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-5">
 
         {/* Sales Revenue Card */}
-        <div className="lg:col-span-7 bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200/80 shadow-xs">
+        <div className="lg:col-span-7 bg-white rounded-[32px] p-5 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between">
 
-          <div className="flex items-center gap-1.5 mb-3 sm:mb-4">
-            <span className="w-1 h-4 bg-[#2563eb] rounded-full" />
-            <h3 className="text-xs sm:text-sm font-extrabold text-slate-800">Sales Revenue</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-2 h-2 bg-slate-900 rounded-full" />
+            <h3 className="text-sm font-black text-slate-900 tracking-tight">Sales Revenue</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-center">
             {/* Left stat */}
             <div className="flex sm:flex-col items-baseline justify-between sm:justify-start gap-2">
               <div>
-                <span className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight block">55k</span>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5 sm:mt-1 leading-tight">
+                <span className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight block">55k</span>
+                <p className="text-xs text-slate-400 font-medium mt-1 leading-tight">
                   This Is Sales Revenue Overview
                 </p>
               </div>
             </div>
 
             {/* Dark floating card */}
-            <div className="bg-[#19232d] text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-md">
-              <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/10 flex items-center justify-center">
-                  <Download className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <div className="bg-[#121316] text-white p-4 sm:p-5 rounded-[24px] shadow-lg">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <Download className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-[10px] sm:text-[11px] text-slate-300 font-medium text-right">Order Received</span>
+                <span className="text-xs text-slate-400 font-medium text-right">Order Received</span>
               </div>
-              <span className="text-lg sm:text-xl font-black block">1,254K</span>
-              <div className="flex items-center justify-between mt-1.5 sm:mt-2 text-[10px] sm:text-[11px]">
-                <span className="text-emerald-400 font-bold flex items-center gap-0.5">
-                  25% <TrendingUp className="w-3 h-3" />
+              <span className="text-xl sm:text-2xl font-black block">1,254K</span>
+              <div className="flex items-center justify-between mt-2 text-xs">
+                <span className="text-emerald-400 font-extrabold flex items-center gap-1">
+                  25% <TrendingUp className="w-3.5 h-3.5" />
                 </span>
-                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 cursor-pointer" />
+                <ChevronDown className="w-4 h-4 text-slate-400 cursor-pointer" />
               </div>
             </div>
 

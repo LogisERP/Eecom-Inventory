@@ -73,15 +73,15 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       {/* Right controls */}
       <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
 
-        {/* High Contrast Prominent Search Bar */}
-        <div className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2 border-2 border-slate-300/90 flex-1 sm:w-64 focus-within:ring-4 focus-within:ring-blue-500/15 focus-within:border-blue-600 shadow-xs hover:border-slate-400 transition-all">
-          <Search className="w-4 h-4 text-blue-600 shrink-0 font-extrabold" />
+        {/* High Contrast Prominent Search Bar (Pill with filter icon style) */}
+        <div className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2.5 border border-slate-200/90 flex-1 sm:w-72 focus-within:ring-4 focus-within:ring-slate-900/10 focus-within:border-slate-900 shadow-xs hover:border-slate-300 transition-all">
+          <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[2.5]" />
           <input
             type="text"
-            placeholder="Search Products..."
+            placeholder="Search products, orders, SKUs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-500 placeholder:font-medium w-full"
+            className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-400 w-full"
           />
         </div>
 

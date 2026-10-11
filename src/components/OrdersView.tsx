@@ -4,24 +4,28 @@ import { Printer } from 'lucide-react';
 
 export const OrdersView: React.FC = () => {
   return (
-    <div className="w-full flex flex-col gap-5 animate-fade-in pb-10">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 animate-fade-in pb-32 pt-2">
       
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-5 rounded-[24px] border border-slate-200/80 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-[32px] border border-slate-200/80 shadow-xs">
         <div>
-          <h2 className="text-xl font-extrabold text-slate-800">Customer Orders</h2>
-          <p className="text-xs text-slate-500 font-medium">1,254K Total Sales in Week • Real-time order status tracking</p>
+          <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-[11px] font-black text-slate-600 mb-1">
+            <span className="w-2 h-2 rounded-full bg-blue-500" />
+            DISPATCH & FULFILLMENT
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Customer Orders</h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">1,254K Total Sales in Week • Real-time order status tracking</p>
         </div>
 
         <button 
           onClick={() => alert('Exporting orders CSV statement...')}
-          className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm flex items-center gap-2"
+          className="py-3 px-6 rounded-full bg-[#121316] hover:bg-black text-white font-black text-xs shadow-md flex items-center gap-2 transition-transform active:scale-95"
         >
-          <Printer className="w-4 h-4 text-[#3b82f6]" />
+          <Printer className="w-4 h-4 text-amber-400" />
           <span>Export Order Report</span>
         </button>
       </div>
 
-      <div className="bg-white rounded-[28px] border border-slate-200/80 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-[32px] border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

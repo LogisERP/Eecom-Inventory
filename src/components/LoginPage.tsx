@@ -69,7 +69,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <img src="/logo.png" alt="Ecom ERP Logo" className="w-14 h-14 rounded-2xl object-cover shadow-lg mx-auto mb-2 border border-slate-700" />
+          <img src="/logo.png" alt="App Logo" className="h-12 w-auto max-w-[140px] rounded-xl object-contain bg-white px-2 py-1 shadow-lg mx-auto mb-3 border border-slate-700" />
           <h1 className="text-xl font-extrabold tracking-tight">
             <span className="text-white">Ecom </span>
             <span className="text-blue-400">ERP</span>
