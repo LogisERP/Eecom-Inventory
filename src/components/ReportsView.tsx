@@ -1,50 +1,69 @@
 import React from 'react';
-import { TrendingUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, ArrowDown, BarChart3, Download } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
+  const metrics = [
+    {
+      label: 'Gross Sales Revenue', value: '$ 55,420.00',
+      sub: '+25% vs target', subColor: 'var(--clr-success)', subIcon: <TrendingUp className="w-3.5 h-3.5" />,
+      accentBg: 'var(--clr-success-lt)', accentColor: 'var(--clr-success)',
+    },
+    {
+      label: 'Total Expenditure', value: '$ 39,462.00',
+      sub: 'Spent in Q1', subColor: 'var(--clr-error)', subIcon: <ArrowDown className="w-3.5 h-3.5" />,
+      accentBg: 'var(--clr-error-lt)', accentColor: 'var(--clr-error)',
+    },
+    {
+      label: 'Net Profit Margin', value: '$ 15,958.00',
+      sub: '28.7% Margin Rate', subColor: 'var(--clr-primary)', subIcon: <BarChart3 className="w-3.5 h-3.5" />,
+      accentBg: 'var(--clr-primary-lt)', accentColor: 'var(--clr-primary)',
+    },
+  ];
+
   return (
-    <div className="w-full flex flex-col gap-6 animate-fade-in pb-10">
-      
-      <div className="bg-white p-4 sm:p-6 rounded-[24px] sm:rounded-[28px] border border-slate-200/80 shadow-xs flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-5 animate-fade-in pb-10" style={{ fontFamily: 'var(--font-game)' }}>
+
+      {/* Header card */}
+      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)', padding: '20px 24px' }}
+        className="flex flex-col gap-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-800">Financial & Performance Reports</h2>
-            <p className="text-xs text-slate-500 font-medium">Executive overview of costs, margins, and sales revenue</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black mb-2"
+              style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)' }}>
+              <BarChart3 className="w-3 h-3" /> FINANCIAL ANALYTICS
+            </div>
+            <h2 className="text-lg sm:text-xl font-black tracking-tight" style={{ color: 'var(--txt-primary)' }}>
+              Financial & Performance Reports
+            </h2>
+            <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--txt-secondary)' }}>
+              Executive overview of costs, margins, and sales revenue
+            </p>
           </div>
-          <button 
+          <button
             onClick={() => alert('Generating full PDF audit report...')}
-            className="py-2.5 px-4 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-md self-start sm:self-auto"
+            className="flex items-center gap-2 font-black text-xs text-white transition-all self-start sm:self-auto"
+            style={{ background: 'var(--grad-primary)', borderRadius: 'var(--radius-pill)', padding: '10px 20px', boxShadow: 'var(--shadow-btn)', border: 'none', cursor: 'pointer' }}
           >
+            <Download className="w-4 h-4" />
             Download PDF Report
           </button>
         </div>
 
-        {/* 3 Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 flex flex-col gap-2">
-            <span className="text-xs font-semibold text-slate-500">Gross Sales Revenue</span>
-            <h3 className="text-2xl font-black text-slate-900">$ 55,420.00</h3>
-            <span className="text-xs font-extrabold text-emerald-600 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" /> +25% vs target
-            </span>
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 flex flex-col gap-2">
-            <span className="text-xs font-semibold text-slate-500">Total Expenditure</span>
-            <h3 className="text-2xl font-black text-slate-900">$ 39,462.00</h3>
-            <span className="text-xs font-extrabold text-slate-600 flex items-center gap-1">
-              <ArrowDown className="w-3.5 h-3.5 text-rose-500" /> Spent in Q1
-            </span>
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 flex flex-col gap-2">
-            <span className="text-xs font-semibold text-slate-500">Net Profit Margin</span>
-            <h3 className="text-2xl font-black text-[#2563eb]">$ 15,958.00</h3>
-            <span className="text-xs font-extrabold text-blue-600">28.7% Margin Rate</span>
-          </div>
+        {/* Metric cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {metrics.map((m) => (
+            <div key={m.label}
+              className="p-5 flex flex-col gap-2 transition-all hover:-translate-y-0.5"
+              style={{ background: m.accentBg, borderRadius: 'var(--radius-lg)', border: `1.5px solid ${m.accentColor}30` }}>
+              <span className="text-xs font-bold" style={{ color: m.accentColor }}>{m.label}</span>
+              <h3 className="text-2xl font-black" style={{ color: 'var(--txt-primary)' }}>{m.value}</h3>
+              <span className="text-xs font-extrabold flex items-center gap-1" style={{ color: m.subColor }}>
+                {m.subIcon} {m.sub}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
-
     </div>
   );
 };

@@ -14,180 +14,237 @@ interface TopHeaderProps {
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
-  title,
-  searchQuery,
-  setSearchQuery,
-  onOpenMobileMenu,
-  currentUser,
-  onLogout,
-  onOpenProfile,
+  title, searchQuery, setSearchQuery,
+  onOpenMobileMenu, currentUser, onLogout, onOpenProfile,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const avatarUrl = currentUser?.profilePic || DEFAULT_AVATAR;
 
   return (
-    <header className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-6 pb-4 mb-4 border-b border-slate-200/70 relative z-30">
-
-      {/* Title & Mobile Menu Button */}
+    <header
+      className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-5 pb-4 mb-2 relative z-30"
+      style={{
+        borderBottom: '1.5px solid var(--border-base)',
+        fontFamily: 'var(--font-game)',
+      }}
+    >
+      {/* ── Left: Title + Mobile Menu ─────────────────── */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
+          {/* Mobile hamburger */}
           <button
             onClick={onOpenMobileMenu}
-            className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+            className="md:hidden p-2.5 rounded-2xl transition-all shrink-0 cursor-pointer active:scale-95"
             aria-label="Open Navigation Menu"
+            style={{
+              background: 'var(--clr-primary-lt)',
+              border: '1px solid var(--border-base)',
+              color: 'var(--clr-primary)',
+            }}
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h1 className="text-lg md:text-xl font-black text-slate-800 tracking-tight whitespace-nowrap">
+
+          {/* Mobile Logo Mark */}
+          <div
+            className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl p-1 bg-white shadow-xs shrink-0"
+            style={{ border: '1.5px solid var(--border-base)' }}
+          >
+            <img src="/logo-mark.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
+
+          <h1 className="text-lg md:text-xl font-black tracking-tight whitespace-nowrap"
+            style={{ color: 'var(--txt-primary)' }}>
             {title}
           </h1>
         </div>
 
-        {/* Mobile quick profile icon */}
+        {/* Mobile quick profile */}
         <div className="sm:hidden flex items-center gap-2">
           <button
             onClick={onOpenProfile}
-            className="flex items-center gap-1.5 p-1 rounded-full bg-slate-100 border border-slate-200 active:scale-95 transition-transform"
+            className="flex items-center gap-1.5 p-1 rounded-full transition-transform active:scale-95"
+            style={{ background: 'var(--clr-primary-lt)', border: '1.5px solid var(--border-base)' }}
           >
-            <img
-              src={avatarUrl}
-              alt={currentUser?.userName || 'User'}
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.onerror = null;
-                img.src = DEFAULT_AVATAR;
-              }}
-              className="w-8 h-8 rounded-full object-cover border border-slate-200"
-            />
+            <img src={avatarUrl} alt={currentUser?.userName || 'User'}
+              onError={(e) => { (e.target as HTMLImageElement).src = DEFAULT_AVATAR; }}
+              className="w-8 h-8 rounded-full object-cover" />
           </button>
           <button
             onClick={onLogout}
-            className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
+            className="p-2 rounded-xl transition-all"
             title="Sign Out"
+            style={{ background: 'var(--clr-error-lt)', color: 'var(--clr-error)' }}
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Right controls */}
+      {/* ── Right: Search + Actions ───────────────────── */}
       <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
 
-        {/* High Contrast Prominent Search Bar (Pill with filter icon style) */}
-        <div className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2.5 border border-slate-200/90 flex-1 sm:w-72 focus-within:ring-4 focus-within:ring-slate-900/10 focus-within:border-slate-900 shadow-xs hover:border-slate-300 transition-all">
-          <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[2.5]" />
+        {/* Search pill */}
+        <div
+          className="flex items-center gap-2.5 flex-1 sm:w-72 px-4 py-2.5 transition-all"
+          style={{
+            background: '#FFFFFF',
+            border: '1.5px solid var(--border-base)',
+            borderRadius: 'var(--radius-pill)',
+            boxShadow: 'var(--shadow-sm)',
+          }}
+        >
+          <Search className="w-4 h-4 shrink-0 stroke-[2.5]" style={{ color: 'var(--clr-primary)' }} />
           <input
             type="text"
             placeholder="Search products, orders, SKUs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-400 w-full"
+            className="bg-transparent border-none outline-none text-xs font-bold w-full"
+            style={{ color: 'var(--txt-primary)' }}
+            onFocus={(e) => {
+              const parent = e.target.parentElement!;
+              parent.style.borderColor = 'var(--clr-primary)';
+              parent.style.boxShadow = '0 0 0 3px var(--clr-primary-glow)';
+            }}
+            onBlur={(e) => {
+              const parent = e.target.parentElement!;
+              parent.style.borderColor = 'var(--border-base)';
+              parent.style.boxShadow = 'var(--shadow-sm)';
+            }}
           />
         </div>
 
-        {/* Action icons (Desktop) */}
-        <div className="hidden sm:flex items-center gap-2.5">
-          <button className="relative w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors shadow-xs">
-            <Bell className="w-4 h-4 text-slate-600" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full ring-2 ring-white" />
+        {/* Desktop action icons */}
+        <div className="hidden sm:flex items-center gap-2">
+          {/* Bell */}
+          <button className="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
+            style={{ background: '#fff', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--clr-primary)'; e.currentTarget.style.background = 'var(--clr-primary-lt)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-base)'; e.currentTarget.style.background = '#fff'; }}
+          >
+            <Bell className="w-4 h-4" style={{ color: 'var(--txt-secondary)' }} />
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white"
+              style={{ background: 'var(--clr-accent)' }} />
           </button>
 
-          <button className="w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors shadow-xs">
-            <MessageSquare className="w-4 h-4 text-slate-600" />
+          {/* Message */}
+          <button className="w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
+            style={{ background: '#fff', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--clr-primary)'; e.currentTarget.style.background = 'var(--clr-primary-lt)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-base)'; e.currentTarget.style.background = '#fff'; }}
+          >
+            <MessageSquare className="w-4 h-4" style={{ color: 'var(--txt-secondary)' }} />
           </button>
 
-          {/* Premium UI User Profile Card Dropdown */}
+          {/* User profile dropdown */}
           <div className="relative">
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-3 bg-white rounded-full pl-1.5 pr-4 py-1.5 border border-slate-200/90 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-xs"
+              className="flex items-center gap-2.5 cursor-pointer group transition-all rounded-2xl pl-1.5 pr-3 py-1.5"
+              style={{
+                background: '#fff',
+                border: '1.5px solid var(--border-base)',
+                boxShadow: 'var(--shadow-sm)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--clr-primary)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-base)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+              }}
             >
               <div className="relative shrink-0">
                 <img
                   src={avatarUrl}
                   alt={currentUser?.userName || 'User'}
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.onerror = null;
-                    img.src = DEFAULT_AVATAR;
-                  }}
-                  className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-inner group-hover:scale-105 transition-transform"
+                  onError={(e) => { (e.target as HTMLImageElement).src = DEFAULT_AVATAR; }}
+                  className="w-8 h-8 rounded-xl object-cover"
+                  style={{ border: '2px solid var(--clr-primary-lt)' }}
                 />
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white"
+                  style={{ background: 'var(--clr-success)' }} />
               </div>
-
-              <div className="flex flex-col justify-center items-center text-center min-w-0 max-w-[140px] py-0.5">
-                <span className="text-xs font-extrabold text-slate-900 leading-snug truncate w-full group-hover:text-blue-600 transition-colors text-center">
-                  {currentUser?.userName || 'Varatharajan R'}
+              <div className="flex flex-col min-w-0 max-w-[130px]">
+                <span className="text-xs font-extrabold truncate" style={{ color: 'var(--txt-primary)' }}>
+                  {currentUser?.userName || 'Admin'}
                 </span>
-                <span className="text-[10px] text-blue-600 font-bold leading-tight flex items-center justify-center gap-1 truncate mt-0.5 w-full text-center">
-                  <Shield className="w-2.5 h-2.5 text-blue-500 shrink-0" />
+                <span className="text-[10px] font-bold flex items-center gap-1 truncate"
+                  style={{ color: 'var(--clr-primary)' }}>
+                  <Shield className="w-2.5 h-2.5 shrink-0" />
                   {currentUser?.roleName || 'Administrator'}
                 </span>
               </div>
-
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform ml-0.5 ${isDropdownOpen ? 'rotate-180 text-blue-600' : ''}`} />
+              <ChevronDown className="w-3.5 h-3.5 shrink-0 transition-transform ml-0.5"
+                style={{
+                  color: 'var(--txt-muted)',
+                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)',
+                }} />
             </div>
 
-            {/* Dropdown Menu */}
+            {/* Dropdown */}
             {isDropdownOpen && (
               <>
+                <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)} />
                 <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setIsDropdownOpen(false)}
-                />
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-scale-in">
-                  
-                  {/* Quick User Header */}
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 mb-1 flex items-center gap-3">
-                    <img
-                      src={avatarUrl}
-                      alt={currentUser?.userName || 'User'}
-                      className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-xs"
-                    />
+                  className="absolute right-0 mt-2 w-64 p-2 z-50 animate-scale-in"
+                  style={{
+                    background: '#fff',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1.5px solid var(--border-base)',
+                    boxShadow: 'var(--shadow-lg)',
+                  }}
+                >
+                  {/* User header */}
+                  <div className="p-3 rounded-xl mb-1 flex items-center gap-3"
+                    style={{ background: 'var(--clr-primary-lt)', border: '1px solid var(--border-base)' }}>
+                    <img src={avatarUrl} alt={currentUser?.userName || 'User'}
+                      className="w-10 h-10 rounded-xl object-cover shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-xs font-extrabold text-slate-800 truncate">{currentUser?.userName}</p>
-                      <p className="text-[11px] font-medium text-slate-500 truncate">{currentUser?.email}</p>
-                      <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold text-blue-700 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded mt-1">
-                        {currentUser?.userId || 'USR-1001'} • {currentUser?.roleName}
+                      <p className="text-xs font-extrabold truncate" style={{ color: 'var(--txt-primary)' }}>
+                        {currentUser?.userName}
+                      </p>
+                      <p className="text-[11px] font-medium truncate" style={{ color: 'var(--txt-secondary)' }}>
+                        {currentUser?.email}
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-[9px] font-black px-2 py-0.5 rounded-full mt-1"
+                        style={{ background: 'var(--clr-primary)', color: '#fff' }}>
+                        {currentUser?.userId || 'USR-1001'} · {currentUser?.roleName}
                       </span>
                     </div>
                   </div>
 
-                  {/* Menu Items */}
                   <button
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      onOpenProfile();
-                    }}
-                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/70 flex items-center gap-2.5 transition-colors"
+                    onClick={() => { setIsDropdownOpen(false); onOpenProfile(); }}
+                    className="w-full px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all"
+                    style={{ color: 'var(--txt-primary)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-primary-lt)'; e.currentTarget.style.color = 'var(--clr-primary)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--txt-primary)'; }}
                   >
-                    <User className="w-4 h-4 text-blue-600" />
-                    <span>View & Edit Profile</span>
+                    <User className="w-4 h-4" style={{ color: 'var(--clr-primary)' }} />
+                    View & Edit Profile
                   </button>
 
-                  <div className="h-px bg-slate-100 my-1" />
+                  <div className="h-px my-1" style={{ background: 'var(--border-base)' }} />
 
                   <button
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      onLogout();
-                    }}
-                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50/70 flex items-center gap-2.5 transition-colors"
+                    onClick={() => { setIsDropdownOpen(false); onLogout(); }}
+                    className="w-full px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all"
+                    style={{ color: 'var(--clr-error)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-error-lt)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <LogOut className="w-4 h-4 text-rose-500" />
-                    <span>Sign Out</span>
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
                   </button>
-
                 </div>
               </>
             )}
           </div>
-
         </div>
-
       </div>
     </header>
   );
 };
-

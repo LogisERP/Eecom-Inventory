@@ -134,8 +134,8 @@ export function App() {
 
   return (
     <div
-      style={{ fontFamily: "var(--font-sans)" }}
-      className="h-screen w-screen bg-[#f1f5f9] flex overflow-hidden relative"
+      style={{ fontFamily: "var(--font-game)", background: 'var(--grad-app-bg)' }}
+      className="h-screen w-screen flex overflow-hidden relative"
     >
       {/* ─── Desktop Sidebar ─── */}
       <div className="hidden md:flex shrink-0">
@@ -154,11 +154,12 @@ export function App() {
           {/* Backdrop overlay */}
           <div
             onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-fade-in"
+            className="fixed inset-0 animate-fade-in"
+            style={{ background: 'rgba(26,16,51,0.65)', backdropFilter: 'blur(6px)' }}
           />
-
           {/* Drawer content */}
-          <div className="relative w-4/5 max-w-xs bg-[#141c25] h-full z-10 shadow-2xl flex">
+          <div className="relative w-4/5 max-w-xs h-full z-10 shadow-2xl flex animate-sheet-up"
+            style={{ background: 'var(--grad-sidebar)' }}>
             <SidebarNav
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -188,7 +189,7 @@ export function App() {
         </div>
 
         {/* Scrollable content with iOS native screen transition */}
-        <div key={activeTab} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-4 animate-fade-in">
+        <div key={activeTab} className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-7 pb-24 md:pb-6 animate-fade-in">
           {activeTab === 'home' && (
             <HomeView
               currentUser={currentUser}
@@ -231,10 +232,12 @@ export function App() {
           {isAdmin && activeTab === 'reports' && <ReportsView />}
 
           {activeTab === 'settings' && (
-            <div className="bg-white p-5 sm:p-6 rounded-[28px] border border-slate-200/80 shadow-sm mt-2 sm:mt-4">
-              <h3 className="text-base sm:text-lg font-extrabold text-slate-800">Store Settings & Automation</h3>
-              <p className="text-xs text-slate-500 font-medium mt-1">Manage API keys, automated reorder thresholds, and staff access permissions.</p>
-              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700">
+            <div className="mt-2 sm:mt-4 p-5 sm:p-6 animate-fade-in"
+              style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)' }}>
+              <h3 className="text-base sm:text-lg font-black" style={{ color: 'var(--txt-primary)' }}>Store Settings & Automation</h3>
+              <p className="text-xs font-semibold mt-1" style={{ color: 'var(--txt-secondary)' }}>Manage API keys, automated reorder thresholds, and staff access permissions.</p>
+              <div className="mt-4 p-4 text-xs font-bold flex items-center gap-2"
+                style={{ background: 'var(--clr-primary-lt)', borderRadius: 'var(--radius-md)', border: '1.5px solid var(--border-base)', color: 'var(--clr-primary)' }}>
                 ⚡ Automatic AI Reordering Enabled for Low Stock (Threshold: &lt; 50 units)
               </div>
             </div>

@@ -10,45 +10,71 @@ interface InventoryViewProps {
   onOpenAddModal: () => void;
 }
 
+const STATUS_BADGE: Record<string, { bg: string; color: string }> = {
+  'In Stock':     { bg: 'var(--clr-success-lt)',  color: 'var(--clr-success)'  },
+  'Low Stock':    { bg: 'var(--clr-primary-lt)',  color: 'var(--clr-primary)'  },
+  'Out of Stock': { bg: 'var(--clr-error-lt)',    color: 'var(--clr-error)'    },
+  'Dead Stock':   { bg: '#F1F5F9',               color: '#64748B'             },
+};
+
 export const InventoryView: React.FC<InventoryViewProps> = ({
-  products,
-  activeStatusFilter,
-  setActiveStatusFilter,
-  onSelectProduct,
-  onOpenAddModal,
+  products, activeStatusFilter, setActiveStatusFilter, onSelectProduct, onOpenAddModal,
 }) => {
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const filteredProducts = products.filter((p) => {
-    const matchesStatus =
-      activeStatusFilter === 'All' || p.status.toLowerCase() === activeStatusFilter.toLowerCase();
-    const matchesCategory =
-      categoryFilter === 'All' || p.category.toLowerCase() === categoryFilter.toLowerCase();
-    const matchesSearch =
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.sku.toLowerCase().includes(searchTerm.toLowerCase());
-
+    const matchesStatus   = activeStatusFilter === 'All' || p.status.toLowerCase() === activeStatusFilter.toLowerCase();
+    const matchesCategory = categoryFilter === 'All' || p.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesSearch   = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.sku.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesCategory && matchesSearch;
   });
 
+  const statusCards = [
+    { id: 'All',          label: 'All Items',     count: products.length,  gradient: 'linear-gradient(135deg,#7C50F0,#5B21B6)', dot: 'var(--clr-primary)' },
+    { id: 'In Stock',     label: 'In Stock',      count: 495,              gradient: 'linear-gradient(135deg,#34D399,#10B981)', dot: 'var(--clr-success)' },
+    { id: 'Low Stock',    label: 'Low Stock',     count: 120,              gradient: 'linear-gradient(135deg,#A78BFA,#6C3CE1)', dot: 'var(--clr-primary)' },
+    { id: 'Out of Stock', label: 'Out of Stock',  count: 89,               gradient: 'linear-gradient(135deg,#F87171,#EF4444)', dot: 'var(--clr-error)'   },
+    { id: 'Dead Stock',   label: 'Dead Stock',    count: 20,               gradient: 'linear-gradient(135deg,#94A3B8,#64748B)', dot: '#94A3B8'            },
+  ];
+
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 animate-fade-in pb-32 pt-2">
-      
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-7 rounded-[32px] border border-slate-200/80 shadow-xs">
-        <div>
-          <div className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full text-[11px] font-black text-slate-600 mb-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-5 sm:gap-6 animate-fade-in pb-32 pt-2"
+      style={{ fontFamily: 'var(--font-game)' }}>
+
+      {/* Header Banner */}
+      <div className="relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-7"
+        style={{
+          background: 'linear-gradient(135deg,#1A1033 0%,#231547 60%,#2D1A5A 100%)',
+          borderRadius: 'var(--radius-xl)',
+          boxShadow: 'var(--shadow-lg)',
+        }}>
+        <div className="absolute top-0 right-0 w-56 h-56 rounded-full blur-3xl pointer-events-none"
+          style={{ background: 'rgba(108,60,225,0.25)' }} />
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black mb-2"
+            style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)' }}>
+            <span className="w-2 h-2 rounded-full" style={{ background: 'var(--clr-success)' }} />
             CATALOG REPOSITORY
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Inventory Catalog</h2>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Manage stock levels, SKUs, and pricing across categories</p>
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">Inventory Catalog</h2>
+          <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+            Manage stock levels, SKUs, and pricing across categories
+          </p>
         </div>
 
         <button
           onClick={onOpenAddModal}
-          className="py-3 px-6 rounded-full bg-[#121316] hover:bg-black text-white font-black text-xs shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95 self-start sm:self-auto w-full sm:w-auto"
+          className="relative z-10 flex items-center justify-center gap-2 font-black text-xs transition-all self-start sm:self-auto"
+          style={{
+            background: 'var(--grad-accent)',
+            color: '#fff',
+            borderRadius: 'var(--radius-pill)',
+            padding: '12px 24px',
+            boxShadow: 'var(--shadow-btn-accent)',
+            border: 'none',
+            cursor: 'pointer',
+          }}
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Add New Product</span>
@@ -56,54 +82,78 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
       </div>
 
       {/* Status Filter Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
-        {([
-          { id: 'All', label: 'All Items', count: products.length, activeClass: 'bg-[#121316] text-white border-black', textClass: 'text-slate-500' },
-          { id: 'In Stock', label: 'In Stock', count: 495, activeClass: 'bg-emerald-600 text-white border-emerald-700', textClass: 'text-emerald-600' },
-          { id: 'Low Stock', label: 'Low Stock', count: 120, activeClass: 'bg-purple-600 text-white border-purple-700', textClass: 'text-purple-600' },
-          { id: 'Out of Stock', label: 'Out of Stock', count: 89, activeClass: 'bg-rose-600 text-white border-rose-700', textClass: 'text-rose-600' },
-          { id: 'Dead Stock', label: 'Dead Stock', count: 20, activeClass: 'bg-slate-800 text-white border-slate-900', textClass: 'text-slate-500' },
-        ]).map((item) => {
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        {statusCards.map((item) => {
           const active = activeStatusFilter === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveStatusFilter(item.id)}
-              className={`p-4 sm:p-5 rounded-[24px] border text-left transition-all ${
-                active
-                  ? `${item.activeClass} shadow-md scale-[1.02]`
-                  : 'bg-white text-slate-800 border-slate-200/90 hover:bg-slate-50 hover:border-slate-300'
-              }`}
+              className="p-4 sm:p-5 text-left transition-all"
+              style={active ? {
+                background: item.gradient,
+                color: '#fff',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: '0 4px 20px rgba(108,60,225,0.30)',
+                border: 'none',
+                transform: 'translateY(-2px)',
+              } : {
+                background: '#fff',
+                color: 'var(--txt-primary)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1.5px solid var(--border-base)',
+                boxShadow: 'var(--shadow-sm)',
+              }}
+              onMouseEnter={(e) => { if (!active) { e.currentTarget.style.borderColor = item.dot; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; } }}
+              onMouseLeave={(e) => { if (!active) { e.currentTarget.style.borderColor = 'var(--border-base)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; } }}
             >
-              <span className={`text-xs font-bold block ${active ? 'text-white' : item.textClass}`}>
+              <span className="text-xs font-bold block" style={{ color: active ? 'rgba(255,255,255,0.80)' : 'var(--txt-muted)' }}>
                 {item.label}
               </span>
-              <span className="text-xl sm:text-2xl font-black mt-1 block">{item.count}</span>
+              <span className="text-xl sm:text-2xl font-black mt-1 block"
+                style={{ color: active ? '#fff' : 'var(--txt-primary)' }}>
+                {item.count}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {/* Inventory Table Card */}
-      <div className="bg-white rounded-[32px] border border-slate-200/80 shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-2.5 bg-slate-50 px-4 py-2.5 rounded-full border border-slate-200 focus-within:border-slate-900 focus-within:bg-white focus-within:ring-4 focus-within:ring-slate-900/10 shadow-2xs w-full sm:max-w-sm transition-all">
-            <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[2.5]" />
+      {/* Table Card */}
+      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
+
+        {/* Toolbar */}
+        <div className="p-4 sm:p-5 flex items-center justify-between flex-wrap gap-4"
+          style={{ borderBottom: '1.5px solid var(--border-base)', background: '#FAFAFA' }}>
+          <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 sm:max-w-sm transition-all"
+            style={{ background: '#fff', border: '1.5px solid var(--border-base)', borderRadius: 'var(--radius-pill)', boxShadow: 'var(--shadow-sm)' }}>
+            <Search className="w-4 h-4 shrink-0 stroke-[2.5]" style={{ color: 'var(--clr-primary)' }} />
             <input
               type="text"
               placeholder="Search product or SKU..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent border-none outline-none text-xs text-slate-900 font-bold placeholder:text-slate-400 w-full"
+              className="bg-transparent border-none outline-none text-xs font-bold w-full"
+              style={{ color: 'var(--txt-primary)' }}
+              onFocus={(e) => { const p = e.target.parentElement!; p.style.borderColor = 'var(--clr-primary)'; p.style.boxShadow = '0 0 0 3px var(--clr-primary-glow)'; }}
+              onBlur={(e) => { const p = e.target.parentElement!; p.style.borderColor = 'var(--border-base)'; p.style.boxShadow = 'var(--shadow-sm)'; }}
             />
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-xs font-bold text-slate-400">Category:</span>
+            <span className="text-xs font-bold" style={{ color: 'var(--txt-muted)' }}>Category:</span>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-white border border-slate-200 rounded-full px-4 py-2 text-xs font-black text-slate-800 outline-none shadow-2xs"
+              className="text-xs font-black outline-none cursor-pointer"
+              style={{
+                background: '#fff',
+                border: '1.5px solid var(--border-base)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '8px 16px',
+                color: 'var(--txt-primary)',
+                boxShadow: 'var(--shadow-sm)',
+              }}
             >
               <option value="All">All Categories</option>
               <option value="Jewelry">Jewelry</option>
@@ -115,74 +165,89 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
           </div>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200/80 text-[10px] sm:text-[11px] font-extrabold uppercase text-slate-500 tracking-wider">
-                <th className="py-3 px-4 sm:px-5">Product Name</th>
-                <th className="py-3 px-4 sm:px-5">SKU ID</th>
-                <th className="py-3 px-4 sm:px-5">Category</th>
-                <th className="py-3 px-4 sm:px-5">Price</th>
-                <th className="py-3 px-4 sm:px-5">Stock Level</th>
-                <th className="py-3 px-4 sm:px-5">Demand Trend</th>
-                <th className="py-3 px-4 sm:px-5">Status</th>
-                <th className="py-3 px-4 sm:px-5 text-right">Action</th>
+              <tr className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider"
+                style={{ background: 'var(--clr-primary-lt)', borderBottom: '2px solid var(--border-strong)', color: 'var(--clr-primary)' }}>
+                <th className="py-3.5 px-4 sm:px-5">Product Name</th>
+                <th className="py-3.5 px-4 sm:px-5">SKU ID</th>
+                <th className="py-3.5 px-4 sm:px-5">Category</th>
+                <th className="py-3.5 px-4 sm:px-5">Price</th>
+                <th className="py-3.5 px-4 sm:px-5">Stock Level</th>
+                <th className="py-3.5 px-4 sm:px-5">Demand Trend</th>
+                <th className="py-3.5 px-4 sm:px-5">Status</th>
+                <th className="py-3.5 px-4 sm:px-5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
-              {filteredProducts.map((p) => (
-                <tr 
-                  key={p.id}
-                  className="hover:bg-slate-50/80 transition-colors group"
-                >
-                  <td className="py-4 px-4 sm:px-6">
-                    <div 
-                      onClick={() => onSelectProduct(p)}
-                      className="flex items-center gap-3.5 cursor-pointer min-w-[140px]"
-                    >
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl object-contain bg-slate-50 p-1.5 border border-slate-200/80 shrink-0 group-hover:scale-105 transition-transform"
-                      />
-                      <span className="font-black text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-                        {p.name}
+            <tbody>
+              {filteredProducts.map((p, idx) => {
+                const badge = STATUS_BADGE[p.status] || { bg: '#F1F5F9', color: '#64748B' };
+                return (
+                  <tr key={p.id}
+                    className="transition-colors group"
+                    style={{ borderBottom: '1px solid var(--border-base)', background: idx % 2 === 0 ? '#fff' : '#FAFBFF' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-primary-lt)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#FAFBFF'; }}
+                  >
+                    <td className="py-4 px-4 sm:px-5">
+                      <div onClick={() => onSelectProduct(p)}
+                        className="flex items-center gap-3.5 cursor-pointer min-w-[140px]">
+                        <img src={p.image} alt={p.name}
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl object-contain p-1.5 shrink-0 group-hover:scale-105 transition-transform"
+                          style={{ background: 'var(--clr-primary-lt)', border: '1.5px solid var(--border-base)' }} />
+                        <span className="font-black text-sm transition-colors" style={{ color: 'var(--txt-primary)' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--clr-primary)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--txt-primary)'; }}>
+                          {p.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 sm:px-5">
+                      <span className="font-mono font-bold text-xs px-2.5 py-1 rounded-lg"
+                        style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)' }}>
+                        {p.sku}
                       </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 sm:px-6 font-mono text-slate-500 font-bold whitespace-nowrap">{p.sku}</td>
-                  <td className="py-4 px-4 sm:px-6 font-bold text-slate-700 whitespace-nowrap">{p.category}</td>
-                  <td className="py-4 px-4 sm:px-6 font-black text-slate-900 whitespace-nowrap">${p.price.toFixed(2)}</td>
-                  <td className="py-4 px-4 sm:px-6 font-bold text-slate-800 whitespace-nowrap">{p.stockCount} units</td>
-                  <td className="py-4 px-4 sm:px-6 font-extrabold text-emerald-600 whitespace-nowrap">{p.demandTrend}</td>
-                  <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black ${
-                      p.status === 'In Stock'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : p.status === 'Low Stock'
-                        ? 'bg-purple-100 text-purple-800'
-                        : p.status === 'Out of Stock'
-                        ? 'bg-rose-100 text-rose-800'
-                        : 'bg-slate-200 text-slate-700'
-                    }`}>
-                      {p.status}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
-                    <button
-                      onClick={() => onSelectProduct(p)}
-                      className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#121316] text-slate-600 hover:text-white flex items-center justify-center transition-all ml-auto"
-                    >
-                      <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="py-4 px-4 sm:px-5 font-bold text-xs whitespace-nowrap" style={{ color: 'var(--txt-secondary)' }}>{p.category}</td>
+                    <td className="py-4 px-4 sm:px-5 font-black text-sm whitespace-nowrap" style={{ color: 'var(--txt-primary)' }}>${p.price.toFixed(2)}</td>
+                    <td className="py-4 px-4 sm:px-5 font-bold text-xs whitespace-nowrap" style={{ color: 'var(--txt-secondary)' }}>{p.stockCount} units</td>
+                    <td className="py-4 px-4 sm:px-5 font-extrabold text-xs whitespace-nowrap" style={{ color: 'var(--clr-success)' }}>{p.demandTrend}</td>
+                    <td className="py-4 px-4 sm:px-5 whitespace-nowrap">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-black"
+                        style={{ background: badge.bg, color: badge.color }}>
+                        {p.status}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4 sm:px-5 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => onSelectProduct(p)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-all ml-auto"
+                        style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--grad-primary)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.boxShadow = 'var(--shadow-btn)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--clr-primary-lt)'; e.currentTarget.style.color = 'var(--clr-primary)'; e.currentTarget.style.boxShadow = 'none'; }}
+                      >
+                        <ArrowUpRight className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+
+          {filteredProducts.length === 0 && (
+            <div className="p-16 text-center flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-3xl flex items-center justify-center"
+                style={{ background: 'var(--clr-primary-lt)' }}>
+                <Search className="w-6 h-6" style={{ color: 'var(--clr-primary)' }} />
+              </div>
+              <p className="text-sm font-bold" style={{ color: 'var(--txt-secondary)' }}>No products match your filters.</p>
+            </div>
+          )}
         </div>
       </div>
-
     </div>
   );
 };

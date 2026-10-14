@@ -93,23 +93,47 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+      style={{ background: 'rgba(26,16,51,0.65)', backdropFilter: 'blur(8px)' }}
+    >
+      <div
+        className="w-full max-w-lg overflow-hidden transform transition-all animate-scale-in"
+        style={{
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-2xl)',
+          boxShadow: 'var(--shadow-xl)',
+          border: '2px solid rgba(255,255,255,0.8)',
+        }}
+      >
         
         {/* Header */}
-        <div className="px-6 py-5 bg-gradient-to-r from-[#141c25] to-[#1e293b] text-white flex items-center justify-between">
+        <div
+          className="px-6 py-5 flex items-center justify-between"
+          style={{
+            background: 'var(--clr-primary-lt)',
+            borderBottom: '1px solid var(--border-base)',
+          }}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400">
+            <div
+              className="w-10 h-10 flex items-center justify-center font-bold text-white shadow-xs"
+              style={{
+                background: 'var(--grad-primary)',
+                borderRadius: 'var(--radius-lg)',
+              }}
+            >
               <Store className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold tracking-tight text-white">Add New Marketplace</h3>
-              <p className="text-xs text-slate-400 font-medium">Create and register a sales channel entry in DB</p>
+              <h3 className="text-base font-black tracking-tight text-purple-950">Add New Marketplace</h3>
+              <p className="text-xs text-purple-700 font-semibold">Create and register a sales channel entry in DB</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-purple-700 hover:bg-purple-200/50 transition-colors cursor-pointer"
+            style={{ borderRadius: 'var(--radius-pill)' }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -119,15 +143,31 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
           
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-start gap-2.5 animate-shake">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
+            <div
+              className="p-3.5 text-xs font-black flex items-start gap-2.5 animate-shake"
+              style={{
+                background: 'var(--clr-danger-lt)',
+                color: 'var(--clr-danger)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(239,68,68,0.2)',
+              }}
+            >
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {isSuccess && (
-            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div
+              className="p-3.5 text-xs font-black flex items-center gap-2.5"
+              style={{
+                background: 'var(--clr-success-lt)',
+                color: 'var(--clr-success)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(16,185,129,0.2)',
+              }}
+            >
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>Marketplace added and synced to Firebase DB successfully!</span>
             </div>
           )}
@@ -137,9 +177,18 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
             
             {/* Marketplace ID Field */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+              <label className="text-xs font-black text-purple-950 flex items-center justify-between">
                 <span>Marketplace ID <span className="text-rose-500">*</span></span>
-                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Auto Generated</span>
+                <span
+                  className="text-[10px] font-black px-2 py-0.5"
+                  style={{
+                    background: 'var(--clr-success-lt)',
+                    color: 'var(--clr-success)',
+                    borderRadius: 'var(--radius-pill)',
+                  }}
+                >
+                  Auto Generated
+                </span>
               </label>
               <div className="flex items-center gap-1.5">
                 <div className="relative flex-1">
@@ -147,31 +196,47 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
                     type="text"
                     value={marketplaceId}
                     readOnly
-                    className="w-full px-3 py-2 text-xs font-mono font-bold text-slate-800 bg-slate-100 border border-slate-300 rounded-xl focus:outline-none cursor-not-allowed select-all"
+                    className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950 bg-slate-100 border-2 border-slate-200 cursor-not-allowed select-all"
+                    style={{ borderRadius: 'var(--radius-md)' }}
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleRegenerateCode}
                   title="Regenerate code"
-                  className="p-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center gap-1 transition-colors shrink-0"
+                  className="p-2.5 text-purple-800 font-bold text-xs flex items-center gap-1 transition-all cursor-pointer active:scale-95 shrink-0"
+                  style={{
+                    background: 'var(--clr-primary-lt)',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1.5px solid var(--border-base)',
+                  }}
                 >
-                  <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+                  <RefreshCw className="w-3.5 h-3.5 text-purple-600" />
                 </button>
               </div>
             </div>
 
             {/* Created By Field (User ID) */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+              <label className="text-xs font-black text-purple-950 flex items-center justify-between">
                 <span>Created By (User ID)</span>
-                <span className="text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">Active User</span>
+                <span
+                  className="text-[10px] font-black px-2 py-0.5"
+                  style={{
+                    background: 'rgba(244,63,94,0.1)',
+                    color: 'var(--clr-accent)',
+                    borderRadius: 'var(--radius-pill)',
+                  }}
+                >
+                  Active User
+                </span>
               </label>
               <input
                 type="text"
                 value={createdBy}
                 readOnly
-                className="w-full px-3 py-2 text-xs font-mono font-bold text-slate-800 bg-slate-100 border border-slate-300 rounded-xl cursor-not-allowed select-all"
+                className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950 bg-slate-100 border-2 border-slate-200 cursor-not-allowed select-all"
+                style={{ borderRadius: 'var(--radius-md)' }}
               />
             </div>
 
@@ -179,9 +244,18 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
 
           {/* Sales Channel Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+            <label className="text-xs font-black text-purple-950 flex items-center justify-between">
               <span>Sales Channel <span className="text-rose-500">*</span> <span className="text-[10px] font-normal text-slate-400">(Primary Column)</span></span>
-              <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Unique & Mandatory</span>
+              <span
+                className="text-[10px] font-black px-2 py-0.5"
+                style={{
+                  background: 'var(--clr-secondary-lt)',
+                  color: 'var(--clr-secondary)',
+                  borderRadius: 'var(--radius-pill)',
+                }}
+              >
+                Unique & Mandatory
+              </span>
             </label>
             <input
               type="text"
@@ -192,13 +266,14 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
               }}
               placeholder="e.g., Amazon US, Shopify Direct, Walmart, eBay..."
               required
-              className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal placeholder:text-slate-400"
+              className="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 focus:outline-none focus:bg-white focus:border-purple-500 transition-all placeholder:font-medium placeholder:text-slate-400"
+              style={{ borderRadius: 'var(--radius-md)' }}
             />
           </div>
 
           {/* Notes Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700">
+            <label className="text-xs font-black text-purple-950">
               Notes <span className="text-[10px] font-normal text-slate-400">(Optional details)</span>
             </label>
             <textarea
@@ -206,24 +281,35 @@ export const AddMarketplaceModal: React.FC<AddMarketplaceModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               placeholder="Add operation notes, fulfillment method, webhooks, seller ID, or channel configurations..."
-              className="w-full px-3.5 py-2.5 text-xs font-medium text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal placeholder:text-slate-400 resize-none"
+              className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border-2 border-slate-200 focus:outline-none focus:bg-white focus:border-purple-500 transition-all placeholder:font-medium placeholder:text-slate-400 resize-none"
+              style={{ borderRadius: 'var(--radius-md)' }}
             />
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 mt-1">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-purple-50 mt-1">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs transition-colors"
+              className="px-5 py-2.5 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
+              style={{
+                background: 'var(--surface-base)',
+                borderRadius: 'var(--radius-pill)',
+                border: '1.5px solid var(--border-base)',
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isSuccess}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1e3a5f] to-[#2563eb] hover:from-[#142944] hover:to-[#1d4ed8] text-white font-bold text-xs shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all disabled:opacity-50"
+              className="px-6 py-2.5 text-white font-black text-xs flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer active:scale-95"
+              style={{
+                background: 'var(--grad-primary)',
+                borderRadius: 'var(--radius-pill)',
+                boxShadow: 'var(--shadow-btn-primary)',
+              }}
             >
               {isSubmitting ? (
                 <>

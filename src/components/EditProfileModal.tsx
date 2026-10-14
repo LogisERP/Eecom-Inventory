@@ -134,14 +134,32 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto animate-fade-in">
-      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto flex flex-col max-h-[90vh]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in"
+      style={{ background: 'rgba(26, 16, 51, 0.65)', backdropFilter: 'blur(8px)' }}
+    >
+      <div
+        className="w-full max-w-2xl overflow-hidden my-auto flex flex-col max-h-[90vh]"
+        style={{
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-2xl)',
+          boxShadow: 'var(--shadow-xl)',
+          border: '2px solid rgba(255, 255, 255, 0.8)',
+        }}
+      >
 
         {/* Modal Top Header Banner */}
-        <div className="bg-gradient-to-r from-[#141c25] via-[#1e293b] to-[#0f172a] p-5 sm:p-6 text-white relative shrink-0">
+        <div
+          className="p-5 sm:p-6 text-white relative shrink-0"
+          style={{ background: 'var(--grad-hero)' }}
+        >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 transition-colors"
+            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-all cursor-pointer active:scale-95"
+            style={{
+              borderRadius: 'var(--radius-pill)',
+              background: 'rgba(255, 255, 255, 0.15)',
+            }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -151,9 +169,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               <img
                 src={profilePic || currentUser.profilePic || DEFAULT_AVATAR}
                 alt={userName}
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-blue-400/50 shadow-lg"
+                className="w-14 h-14 sm:w-16 sm:h-16 object-cover border-2 border-white/40 shadow-lg"
+                style={{ borderRadius: 'var(--radius-xl)' }}
               />
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 ring-2 ring-[#141c25] flex items-center justify-center">
+              <div
+                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
+                style={{ background: 'var(--clr-success)', border: '2px solid #FFFFFF' }}
+              >
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               </div>
             </div>
@@ -163,12 +185,19 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 <h2 className="text-lg sm:text-xl font-black tracking-tight text-white">
                   My Profile Settings
                 </h2>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 border border-blue-400/30 text-blue-300 px-2.5 py-0.5 rounded-full">
+                <span
+                  className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5"
+                  style={{
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    color: '#FFFFFF',
+                  }}
+                >
                   {currentUser.userId || 'USR-1001'}
                 </span>
               </div>
-              <p className="text-xs text-slate-300 font-medium mt-0.5">
-                Update your account information, authentication settings, and avatar preference.
+              <p className="text-xs text-white/80 font-medium mt-0.5">
+                Update your account details, preferences, and avatar.
               </p>
             </div>
           </div>
@@ -179,30 +208,68 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
           {/* Alert Messages */}
           {errorMsg && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div
+              className="p-3.5 text-xs font-bold flex items-center gap-2.5"
+              style={{
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--clr-danger-lt)',
+                color: 'var(--clr-danger)',
+                border: '1px solid rgba(255, 71, 87, 0.3)',
+              }}
+            >
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2.5 animate-fade-in">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div
+              className="p-3.5 text-xs font-bold flex items-center gap-2.5 animate-fade-in"
+              style={{
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--clr-success-lt)',
+                color: 'var(--clr-success)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+              }}
+            >
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{successMsg}</span>
             </div>
           )}
 
           {/* READ-ONLY Badges Section (User ID & Role) */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div
+            className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            style={{
+              background: '#FAF9FF',
+              borderRadius: 'var(--radius-xl)',
+              border: '1.5px solid var(--border-base)',
+            }}
+          >
             {/* User ID (Read-only) */}
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-slate-400" />
+              <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-purple-500" />
                 User ID (System Autonumber)
               </label>
-              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-slate-200/60 border border-slate-300/70 text-slate-700 font-mono text-xs font-bold">
+              <div
+                className="flex items-center justify-between px-3.5 py-2 font-mono text-xs font-bold"
+                style={{
+                  background: 'var(--clr-primary-lt)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-base)',
+                  color: 'var(--clr-primary)',
+                }}
+              >
                 <span>{currentUser.userId || 'USR-1001'}</span>
-                <span className="text-[10px] font-extrabold uppercase text-slate-400 bg-slate-300/70 px-2 py-0.5 rounded-md">
+                <span
+                  className="text-[10px] font-black uppercase px-2 py-0.5"
+                  style={{
+                    background: '#FFFFFF',
+                    borderRadius: 'var(--radius-pill)',
+                    color: 'var(--clr-primary)',
+                  }}
+                >
                   Read Only
                 </span>
               </div>
@@ -210,16 +277,31 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
             {/* Role (Read-only) */}
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-blue-500" />
                 Assigned System Role
               </label>
-              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-800 text-xs font-bold">
+              <div
+                className="flex items-center justify-between px-3.5 py-2 text-xs font-bold"
+                style={{
+                  background: 'var(--clr-secondary-lt)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid rgba(34, 166, 241, 0.3)',
+                  color: 'var(--clr-secondary)',
+                }}
+              >
                 <span className="flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5 text-blue-600" />
+                  <Shield className="w-3.5 h-3.5" />
                   {currentUser.roleName || 'Administrator'}
                 </span>
-                <span className="text-[10px] font-extrabold uppercase text-blue-600 bg-blue-100 px-2 py-0.5 rounded-md">
+                <span
+                  className="text-[10px] font-black uppercase px-2 py-0.5"
+                  style={{
+                    background: '#FFFFFF',
+                    borderRadius: 'var(--radius-pill)',
+                    color: 'var(--clr-secondary)',
+                  }}
+                >
                   Read Only
                 </span>
               </div>
@@ -235,7 +317,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Full Name */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-slate-500" />
+                <User className="w-3.5 h-3.5 text-purple-600" />
                 Full Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -243,7 +325,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 placeholder="e.g. Varatharajan R"
-                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all focus:outline-none"
+                style={{
+                  background: '#FAF9FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-md)',
+                }}
                 required
               />
             </div>
@@ -251,11 +338,19 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Phone Number */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-slate-500" />
+                <Phone className="w-3.5 h-3.5 text-purple-600" />
                 Phone Number <span className="text-rose-500">*</span>
               </label>
               <div className="flex items-center gap-2">
-                <span className="px-3 py-2.5 text-xs font-extrabold text-slate-700 bg-slate-200/80 border border-slate-300 rounded-xl select-none shrink-0 font-mono">
+                <span
+                  className="px-3 py-2.5 text-xs font-extrabold text-slate-700 select-none shrink-0 font-mono"
+                  style={{
+                    background: 'var(--clr-primary-lt)',
+                    border: '1.5px solid var(--border-base)',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--clr-primary)',
+                  }}
+                >
                   +91
                 </span>
                 <input
@@ -264,7 +359,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   maxLength={10}
                   onChange={(e) => setPhoneDigits(e.target.value.replace(/\D/g, ''))}
                   placeholder="9876543210"
-                  className="w-full px-3.5 py-2.5 text-xs font-bold font-mono text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="w-full px-3.5 py-2.5 text-xs font-bold font-mono text-slate-800 transition-all focus:outline-none"
+                  style={{
+                    background: '#FAF9FF',
+                    border: '1.5px solid var(--border-base)',
+                    borderRadius: 'var(--radius-md)',
+                  }}
                   required
                 />
               </div>
@@ -273,7 +373,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Email Address */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-slate-500" />
+                <Mail className="w-3.5 h-3.5 text-purple-600" />
                 Email Address <span className="text-rose-500">*</span>
               </label>
               <input
@@ -281,7 +381,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. varathan@retailx.io"
-                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all focus:outline-none"
+                style={{
+                  background: '#FAF9FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-md)',
+                }}
                 required
               />
             </div>
@@ -289,7 +394,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Password with Eye Toggle */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-slate-500" />
+                <Lock className="w-3.5 h-3.5 text-purple-600" />
                 Account Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
@@ -298,13 +403,18 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter secure password..."
-                  className="w-full pr-10 pl-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="w-full pr-10 pl-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all focus:outline-none"
+                  style={{
+                    background: '#FAF9FF',
+                    border: '1.5px solid var(--border-base)',
+                    borderRadius: 'var(--radius-md)',
+                  }}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-purple-600 transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -314,13 +424,18 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Time Format */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-slate-500" />
+                <Clock className="w-3.5 h-3.5 text-purple-600" />
                 Time Format
               </label>
               <select
                 value={timeFormat}
                 onChange={(e) => setTimeFormat(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all focus:outline-none cursor-pointer"
+                style={{
+                  background: '#FAF9FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-md)',
+                }}
               >
                 <option value="12-hour (hh:mm A)">12-hour (hh:mm A)</option>
                 <option value="24-hour (HH:mm)">24-hour (HH:mm)</option>
@@ -330,13 +445,18 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             {/* Time Zone */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5 text-slate-500" />
+                <Globe className="w-3.5 h-3.5 text-purple-600" />
                 Time Zone
               </label>
               <select
                 value={timeZone}
                 onChange={(e) => setTimeZone(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all focus:outline-none cursor-pointer"
+                style={{
+                  background: '#FAF9FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-md)',
+                }}
               >
                 <option value="IST (Asia/Kolkata - UTC+05:30)">IST (Asia/Kolkata - UTC+05:30)</option>
                 <option value="UTC (Coordinated Universal Time)">UTC (Coordinated Universal Time)</option>
@@ -349,18 +469,31 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200/80 shrink-0">
+          <div
+            className="flex items-center justify-end gap-3 pt-4 border-t shrink-0"
+            style={{ borderColor: 'var(--border-base)' }}
+          >
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors"
+              className="px-5 py-2.5 text-xs font-extrabold text-slate-600 hover:text-slate-800 transition-all cursor-pointer active:scale-95"
+              style={{
+                borderRadius: 'var(--radius-pill)',
+                border: '1.5px solid var(--border-base)',
+                background: '#FFFFFF',
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-extrabold shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all transform active:scale-95"
+              className="px-6 py-2.5 text-white text-xs font-black flex items-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+              style={{
+                background: 'var(--grad-accent)',
+                borderRadius: 'var(--radius-pill)',
+                boxShadow: 'var(--shadow-btn-accent)',
+              }}
             >
               {submitting ? (
                 <>

@@ -47,26 +47,55 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+      style={{ background: 'rgba(26,16,51,0.65)', backdropFilter: 'blur(8px)' }}
+    >
+      <div
+        className="w-full max-w-lg overflow-hidden transform transition-all animate-scale-in"
+        style={{
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-2xl)',
+          boxShadow: 'var(--shadow-xl)',
+          border: '2px solid rgba(255,255,255,0.8)',
+        }}
+      >
         
         {/* Banner Header */}
-        <div className="p-6 bg-gradient-to-br from-[#141c25] via-[#1e293b] to-[#0f172a] text-white relative">
+        <div
+          className="p-6 text-white relative"
+          style={{ background: 'var(--grad-hero)' }}
+        >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-purple-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
           <div className="flex items-center gap-2 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <span
+              className="px-3 py-0.5 text-[10px] font-black uppercase tracking-wider"
+              style={{
+                background: 'rgba(244,63,94,0.2)',
+                color: '#FFA1B5',
+                borderRadius: 'var(--radius-pill)',
+                border: '1px solid rgba(244,63,94,0.4)',
+              }}
+            >
               Primary Sales Channel
             </span>
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-blue-400 shrink-0">
+            <div
+              className="w-12 h-12 flex items-center justify-center text-white shadow-md shrink-0"
+              style={{
+                background: 'var(--grad-primary)',
+                borderRadius: 'var(--radius-xl)',
+                border: '1.5px solid rgba(255,255,255,0.25)',
+              }}
+            >
               <Store className="w-6 h-6" />
             </div>
             <div className="min-w-0 flex-1">
@@ -74,17 +103,24 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
                 {marketplace.salesChannel}
               </h2>
               <div className="flex items-center gap-2 mt-1.5">
-                <span className="text-xs font-mono font-bold text-slate-300 bg-white/10 px-2.5 py-0.5 rounded-md border border-white/10 flex items-center gap-1.5">
+                <span
+                  className="text-xs font-mono font-bold text-purple-200 px-3 py-1 flex items-center gap-1.5"
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                  }}
+                >
                   ID: {marketplace.marketplaceId}
                   <button
                     onClick={handleCopyCode}
-                    className="hover:text-white transition-colors"
+                    className="hover:text-white transition-colors cursor-pointer"
                     title="Copy Marketplace ID"
                   >
-                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-purple-300" />}
                   </button>
                 </span>
-                {copied && <span className="text-[10px] font-bold text-emerald-400">Copied!</span>}
+                {copied && <span className="text-[10px] font-black text-emerald-400">Copied!</span>}
               </div>
             </div>
           </div>
@@ -94,40 +130,69 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
         <div className="p-6 flex flex-col gap-6">
 
           {deleteError && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
+            <div
+              className="p-3.5 text-xs font-black flex items-center gap-2"
+              style={{
+                background: 'var(--clr-danger-lt)',
+                color: 'var(--clr-danger)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(239,68,68,0.2)',
+              }}
+            >
+              <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{deleteError}</span>
             </div>
           )}
 
           {/* Details list */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div
+              className="p-3.5"
+              style={{
+                background: 'var(--surface-base)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-base)',
+              }}
+            >
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
                 <Globe className="w-3.5 h-3.5 text-blue-500" />
                 Sales Channel
               </span>
-              <p className="text-xs font-extrabold text-slate-800 break-words">
+              <p className="text-xs font-black text-purple-950 break-words">
                 {marketplace.salesChannel}
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div
+              className="p-3.5"
+              style={{
+                background: 'var(--surface-base)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-base)',
+              }}
+            >
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
                 <FileText className="w-3.5 h-3.5 text-emerald-500" />
                 Marketplace ID
               </span>
-              <p className="text-xs font-mono font-extrabold text-slate-800">
+              <p className="text-xs font-mono font-bold text-purple-950">
                 {marketplace.marketplaceId}
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div
+              className="p-3.5"
+              style={{
+                background: 'var(--surface-base)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-base)',
+              }}
+            >
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
                 <FileText className="w-3.5 h-3.5 text-purple-500" />
                 Created By
               </span>
-              <p className="text-xs font-mono font-extrabold text-purple-700">
+              <p className="text-xs font-mono font-black text-purple-700">
                 {marketplace.createdBy || 'USR-1001'}
               </p>
             </div>
@@ -135,35 +200,57 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
 
           {/* Notes Section */}
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-slate-400" />
+            <span className="text-xs font-black text-purple-950 flex items-center gap-1.5">
+              <FileText className="w-4 h-4 text-purple-600" />
               Notes & Configurations
             </span>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 leading-relaxed min-h-[90px] max-h-[200px] overflow-y-auto whitespace-pre-wrap">
+            <div
+              className="p-4 text-xs font-medium text-slate-700 leading-relaxed min-h-[90px] max-h-[200px] overflow-y-auto whitespace-pre-wrap"
+              style={{
+                background: 'var(--surface-base)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--border-base)',
+              }}
+            >
               {marketplace.notes ? marketplace.notes : <span className="italic text-slate-400">No notes attached to this marketplace entry.</span>}
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold">
             {marketplace.createdAt && (
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <Calendar className="w-3.5 h-3.5 text-purple-500" />
                 Created: {new Date(marketplace.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </span>
             )}
-            <span className="font-mono text-purple-600 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 font-bold">
+            <span
+              className="font-mono px-2.5 py-0.5 font-bold"
+              style={{
+                background: 'var(--clr-primary-lt)',
+                color: 'var(--clr-primary)',
+                borderRadius: 'var(--radius-pill)',
+                border: '1px solid rgba(108,60,225,0.2)',
+              }}
+            >
               By {marketplace.createdBy || 'USR-1001'}
             </span>
           </div>
 
           {/* Delete Confirmation Box if triggered */}
           {showConfirmDelete ? (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex flex-col gap-3 animate-fade-in">
+            <div
+              className="p-4 flex flex-col gap-3 animate-fade-in"
+              style={{
+                background: 'var(--clr-danger-lt)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid rgba(239,68,68,0.25)',
+              }}
+            >
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-extrabold text-rose-900">Are you sure you want to delete this Marketplace?</h4>
-                  <p className="text-[11px] text-rose-700 font-medium mt-0.5">
+                  <h4 className="text-xs font-black text-rose-950">Are you sure you want to delete this Marketplace?</h4>
+                  <p className="text-[11px] text-rose-700 font-semibold mt-0.5">
                     This action will permanently delete <span className="font-bold">"{marketplace.salesChannel}"</span> ({marketplace.marketplaceId}) from your database.
                   </p>
                 </div>
@@ -173,14 +260,24 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
                 <button
                   onClick={() => setShowConfirmDelete(false)}
                   disabled={isDeleting}
-                  className="px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 transition-colors"
+                  className="px-4 py-2 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                  style={{
+                    background: '#FFFFFF',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid var(--border-base)',
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+                  className="px-5 py-2 text-white text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  style={{
+                    background: 'var(--grad-accent)',
+                    borderRadius: 'var(--radius-pill)',
+                    boxShadow: 'var(--shadow-btn-accent)',
+                  }}
                 >
                   {isDeleting ? (
                     <>
@@ -198,14 +295,18 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
             </div>
           ) : (
             /* Action Footer */
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+            <div className="flex items-center justify-between pt-4 border-t border-purple-50">
               <div className="flex items-center gap-2">
                 {onEdit && (
                   <button
                     onClick={() => {
                       onEdit(marketplace);
                     }}
-                    className="px-3.5 py-2 rounded-xl text-blue-600 hover:text-blue-700 hover:bg-blue-50 border border-blue-200 text-xs font-bold flex items-center gap-1.5 transition-all"
+                    className="px-4 py-2 text-blue-700 hover:bg-blue-50 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                    style={{
+                      borderRadius: 'var(--radius-pill)',
+                      border: '1.5px solid rgba(37,99,235,0.25)',
+                    }}
                     title="Edit this marketplace"
                   >
                     <Edit3 className="w-4 h-4 text-blue-600" />
@@ -215,7 +316,11 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
 
                 <button
                   onClick={() => setShowConfirmDelete(true)}
-                  className="px-3 py-2 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2 text-rose-600 hover:bg-rose-50 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  style={{
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1.5px solid rgba(239,68,68,0.25)',
+                  }}
                   title="Delete this marketplace from Database"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -225,7 +330,12 @@ export const MarketplaceDetailModal: React.FC<MarketplaceDetailModalProps> = ({
 
               <button
                 onClick={onClose}
-                className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-all shadow-xs"
+                className="px-6 py-2.5 text-purple-900 text-xs font-black transition-all cursor-pointer active:scale-95"
+                style={{
+                  background: 'var(--clr-primary-lt)',
+                  borderRadius: 'var(--radius-pill)',
+                  border: '1px solid var(--border-base)',
+                }}
               >
                 Close
               </button>

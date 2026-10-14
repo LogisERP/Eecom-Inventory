@@ -35,22 +35,45 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 flex flex-col gap-4 relative overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+      style={{ background: 'rgba(26,16,51,0.65)', backdropFilter: 'blur(8px)' }}
+    >
+      <div
+        className="max-w-lg w-full overflow-hidden flex flex-col gap-4 relative animate-scale-in"
+        style={{
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-2xl)',
+          boxShadow: 'var(--shadow-xl)',
+          border: '2px solid rgba(255,255,255,0.8)',
+        }}
+      >
         
         {/* Top Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
+        <div
+          className="p-5 flex items-center justify-between"
+          style={{
+            background: 'var(--clr-primary-lt)',
+            borderBottom: '1px solid var(--border-base)',
+          }}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-700 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+            <div
+              className="w-10 h-10 text-white flex items-center justify-center shadow-md"
+              style={{
+                background: 'var(--grad-accent)',
+                borderRadius: 'var(--radius-lg)',
+              }}
+            >
               <Bot className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+              <h3 className="text-base font-black text-purple-950 flex items-center gap-1.5">
                 Ecom ERP AI Magic
                 <Sparkles className="w-4 h-4 text-amber-500" />
               </h3>
-              <span className="text-[11px] text-slate-500 font-bold flex items-center gap-1">
-                <Database className="w-3 h-3 text-blue-600" />
+              <span className="text-[11px] text-purple-700 font-bold flex items-center gap-1">
+                <Database className="w-3.5 h-3.5 text-purple-600" />
                 Live Firestore Database NLQ Engine
               </span>
             </div>
@@ -58,43 +81,58 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full text-purple-700 hover:bg-purple-200/50 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* AI Output Area */}
-        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/90 min-h-[160px] max-h-[300px] overflow-y-auto text-xs text-slate-800 whitespace-pre-line font-medium leading-relaxed shadow-inner">
-          {isGenerating ? (
-            <div className="flex flex-col items-center justify-center py-10 gap-2.5 text-slate-600 font-bold">
-              <Zap className="w-6 h-6 text-blue-600 animate-bounce" />
-              <span>Querying Live Firestore Database Telemetry...</span>
-            </div>
-          ) : (
-            response
-          )}
-        </div>
-
-        {/* Natural Language Query Form */}
-        <form onSubmit={handleGenerate} className="flex items-center gap-2 pt-2 border-t border-slate-100">
-          <input
-            type="text"
-            placeholder="Ask NLQ (e.g., 'Who created Amazon?', 'Show low stock')..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            disabled={isGenerating}
-            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 font-semibold outline-none focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-400"
-          />
-          <button
-            type="submit"
-            disabled={isGenerating || !prompt.trim()}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white font-extrabold text-xs shadow-md flex items-center gap-1.5 transition-all"
+        <div className="px-6 flex flex-col gap-4">
+          <div
+            className="p-4 min-h-[160px] max-h-[300px] overflow-y-auto text-xs text-purple-950 whitespace-pre-line font-semibold leading-relaxed shadow-inner"
+            style={{
+              background: 'var(--surface-base)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1.5px solid var(--border-base)',
+            }}
           >
-            <span>Ask</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </form>
+            {isGenerating ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-2.5 text-purple-700 font-bold">
+                <Zap className="w-6 h-6 text-purple-600 animate-bounce" />
+                <span>Querying Live Firestore Database Telemetry...</span>
+              </div>
+            ) : (
+              response
+            )}
+          </div>
+
+          {/* Natural Language Query Form */}
+          <form onSubmit={handleGenerate} className="flex items-center gap-2 pb-6 pt-1">
+            <input
+              type="text"
+              placeholder="Ask NLQ (e.g., 'Who created Amazon?', 'Show low stock')..."
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              disabled={isGenerating}
+              className="flex-1 bg-slate-50 border-2 border-slate-200 px-4 py-2.5 text-xs text-slate-800 font-bold outline-none focus:border-purple-600 focus:bg-white transition-all placeholder:text-slate-400 placeholder:font-medium"
+              style={{ borderRadius: 'var(--radius-pill)' }}
+            />
+            <button
+              type="submit"
+              disabled={isGenerating || !prompt.trim()}
+              className="py-2.5 px-5 disabled:opacity-50 text-white font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shrink-0"
+              style={{
+                background: 'var(--grad-primary)',
+                borderRadius: 'var(--radius-pill)',
+                boxShadow: 'var(--shadow-btn-primary)',
+              }}
+            >
+              <span>Ask</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </form>
+        </div>
 
       </div>
     </div>

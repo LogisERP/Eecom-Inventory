@@ -34,281 +34,251 @@ interface SidebarNavProps {
 }
 
 const PRODUCT_DETAILS_ITEMS = [
-  { id: 'product-master', label: 'Product Master', icon: Package },
+  { id: 'product-master',   label: 'Product Master',   icon: Package   },
   { id: 'product-category', label: 'Product Category', icon: FolderTree },
-  { id: 'product-type', label: 'Product Type', icon: Boxes },
-  { id: 'uom', label: 'UOM', icon: Ruler },
-  { id: 'brand', label: 'Brand', icon: Tag },
-  { id: 'supplier-master', label: 'Supplier Master', icon: Factory },
-  { id: 'supplier-site', label: 'Supplier Site', icon: Building2 },
+  { id: 'product-type',     label: 'Product Type',     icon: Boxes      },
+  { id: 'uom',              label: 'UOM',              icon: Ruler      },
+  { id: 'brand',            label: 'Brand',            icon: Tag        },
+  { id: 'supplier-master',  label: 'Supplier Master',  icon: Factory    },
+  { id: 'supplier-site',    label: 'Supplier Site',    icon: Building2  },
 ] as const;
 
 const PEOPLE_ITEMS = [
   { id: 'role', label: 'Role', icon: Shield },
-  { id: 'user', label: 'User', icon: Users },
+  { id: 'user', label: 'User', icon: Users  },
 ] as const;
 
+/* ─── tiny helpers ─────────────────────────────────────────────── */
+const NavItem: React.FC<{
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  active: boolean;
+  onClick: () => void;
+  sub?: boolean;
+}> = ({ label, icon: Icon, active, onClick, sub }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-3 font-extrabold transition-all text-left ${
+      sub ? 'px-3 py-2 text-[12px] rounded-xl' : 'px-4 py-3 text-[13px] rounded-2xl'
+    }`}
+    style={active ? {
+      background: 'linear-gradient(135deg,#7C50F0 0%,#5B21B6 100%)',
+      color: '#fff',
+      boxShadow: '0 4px 14px rgba(108,60,225,0.35)',
+    } : {
+      color: 'rgba(255,255,255,0.55)',
+      background: 'transparent',
+    }}
+    onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
+    onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+  >
+    <Icon className={`${sub ? 'w-4 h-4' : 'w-5 h-5'} shrink-0`}
+      style={{ color: active ? '#fff' : (sub ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.5)') }} />
+    <span className="truncate">{label}</span>
+  </button>
+);
+
+const SectionLabel: React.FC<{ label: string }> = ({ label }) => (
+  <span className="px-3.5 text-[9px] font-black uppercase tracking-[0.18em]"
+    style={{ color: 'rgba(255,255,255,0.30)' }}>
+    {label}
+  </span>
+);
+
 export const SidebarNav: React.FC<SidebarNavProps> = ({
-  activeTab,
-  setActiveTab,
-  onOpenAiModal,
-  onCloseMobile,
-  currentUser,
-  onLogout
+  activeTab, setActiveTab, onOpenAiModal, onCloseMobile, currentUser, onLogout
 }) => {
-  const isProductDetailsTab = PRODUCT_DETAILS_ITEMS.some(item => item.id === activeTab);
+  const isProductDetailsTab = PRODUCT_DETAILS_ITEMS.some(i => i.id === activeTab);
   const [isProductDetailsOpen, setIsProductDetailsOpen] = useState<boolean>(true);
 
   const handleSelectTab = (tab: string) => {
     setActiveTab(tab);
-    if (onCloseMobile) {
-      onCloseMobile();
-    }
+    if (onCloseMobile) onCloseMobile();
   };
 
   const roleName = (currentUser?.roleName || '').trim().toLowerCase();
-  // Check if role is Admin/Administrator. If no role defined, default to true.
   const isAdmin = !currentUser?.roleName || roleName.includes('admin');
 
   return (
-    <aside className="flex flex-col justify-between bg-[#121316] text-slate-300 w-full md:w-[260px] md:min-w-[260px] h-full overflow-y-auto shrink-0 border-r border-slate-800/60 select-none">
-      {/* Top section */}
-      <div className="flex flex-col gap-6 px-5 pt-7 pb-4">
+    <aside
+      className="flex flex-col justify-between w-full md:w-[264px] md:min-w-[264px] h-full overflow-y-auto shrink-0 select-none"
+      style={{
+        background: 'var(--grad-sidebar)',
+        borderRight: '1px solid rgba(255,255,255,0.06)',
+        fontFamily: 'var(--font-game)',
+      }}
+    >
+      {/* ── Top content ─────────────────────────────────── */}
+      <div className="flex flex-col gap-5 px-4 pt-6 pb-4">
 
-        {/* Logo */}
-        <div className="flex items-center justify-between px-1 pb-1">
+        {/* Logo row */}
+        <div className="flex items-center justify-between px-1 pb-2">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="App Logo" className="h-9 w-auto max-w-[90px] rounded-xl object-contain bg-white px-1.5 py-1 shadow-md border border-white/20" />
-            <span className="text-lg font-black tracking-tight">
-              <span className="text-white">Ecom </span>
-              <span className="text-amber-500">ERP</span>
-            </span>
+            {/* Logo pill */}
+            <div className="flex items-center justify-center w-10 h-10 rounded-2xl shrink-0 p-1.5 shadow-md"
+              style={{ background: '#FFFFFF', border: '1.5px solid rgba(255,255,255,0.4)', boxShadow: '0 4px 12px rgba(0,0,0,0.25)' }}>
+              <img src="/logo-mark.png" alt="Logo"
+                className="w-full h-full object-contain"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
+              />
+            </div>
+            <div>
+              <span className="text-[17px] font-black tracking-tight text-white leading-none block">
+                Ecom <span style={{ color: '#A78BFA' }}>ERP</span>
+              </span>
+              <span className="text-[9px] font-bold" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                Inventory Suite
+              </span>
+            </div>
           </div>
-
           {onCloseMobile && (
             <button
               onClick={onCloseMobile}
-              className="md:hidden p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300"
+              className="md:hidden p-2 rounded-full transition-all"
+              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Direct Standalone Home Menu Item (Pill style matching reference) */}
-        <button
-          onClick={() => handleSelectTab('home')}
-          className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-            activeTab === 'home'
-              ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-              : 'text-slate-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Home className={`w-5 h-5 ${activeTab === 'home' ? 'text-slate-950' : 'text-slate-400'}`} />
-          <span>Home</span>
-        </button>
+        {/* Home */}
+        <div className="flex flex-col gap-1">
+          <NavItem id="home" label="Home" icon={Home}
+            active={activeTab === 'home'} onClick={() => handleSelectTab('home')} />
+        </div>
 
-        {/* Role-based Menu Items */}
-        {isAdmin ? (
+        {/* Admin section */}
+        {isAdmin && (
           <>
-            {/* Admin Menu Section */}
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-3.5 mb-1">
-                Admin Console
-              </span>
+            <div className="flex flex-col gap-1">
+              <SectionLabel label="Admin Console" />
+              <div className="mt-1.5 flex flex-col gap-0.5">
+                <NavItem id="dashboard" label="Dashboard" icon={LayoutDashboard}
+                  active={activeTab === 'dashboard'} onClick={() => handleSelectTab('dashboard')} />
+                <NavItem id="inventory" label="Inventory" icon={Package}
+                  active={activeTab === 'inventory'} onClick={() => handleSelectTab('inventory')} />
+                <NavItem id="orders" label="Orders" icon={ShoppingBag}
+                  active={activeTab === 'orders'} onClick={() => handleSelectTab('orders')} />
 
-              {/* Dashboard */}
-              <button
-                onClick={() => handleSelectTab('dashboard')}
-                className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                  activeTab === 'dashboard'
-                    ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <LayoutDashboard className="w-5 h-5" />
-                <span>Dashboard</span>
-              </button>
+                {/* Product Details group */}
+                <div>
+                  <button
+                    onClick={() => setIsProductDetailsOpen(!isProductDetailsOpen)}
+                    className="w-full px-4 py-3 rounded-2xl text-[13px] font-extrabold flex items-center justify-between transition-all"
+                    style={{
+                      background: isProductDetailsTab ? 'rgba(108,60,225,0.20)' : 'transparent',
+                      color: isProductDetailsTab ? '#C4B5FD' : 'rgba(255,255,255,0.55)',
+                    }}
+                    onMouseEnter={(e) => { if (!isProductDetailsTab) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
+                    onMouseLeave={(e) => { if (!isProductDetailsTab) e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Layers className="w-5 h-5 shrink-0" style={{ color: '#A78BFA' }} />
+                      <span>Product Details</span>
+                    </div>
+                    <ChevronDown
+                      className="w-4 h-4 transition-transform duration-200 shrink-0"
+                      style={{
+                        transform: isProductDetailsOpen ? 'rotate(180deg)' : 'rotate(0)',
+                        color: isProductDetailsOpen ? '#A78BFA' : 'rgba(255,255,255,0.35)',
+                      }}
+                    />
+                  </button>
 
-              {/* Inventory */}
-              <button
-                onClick={() => handleSelectTab('inventory')}
-                className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                  activeTab === 'inventory'
-                    ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <Package className="w-5 h-5" />
-                <span>Inventory</span>
-              </button>
+                  {isProductDetailsOpen && (
+                    <div className="ml-5 pl-3 py-1 mt-1 mb-1 flex flex-col gap-0.5"
+                      style={{ borderLeft: '2px solid rgba(108,60,225,0.35)' }}>
+                      {PRODUCT_DETAILS_ITEMS.map((item) => {
+                        const SubIcon = item.icon;
+                        const active = activeTab === item.id;
+                        return (
+                          <NavItem key={item.id} id={item.id} label={item.label} icon={SubIcon}
+                            active={active} onClick={() => handleSelectTab(item.id)} sub />
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
-              {/* Orders */}
-              <button
-                onClick={() => handleSelectTab('orders')}
-                className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                  activeTab === 'orders'
-                    ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <ShoppingBag className="w-5 h-5" />
-                <span>Orders</span>
-              </button>
-
-              {/* Product Details Menu Group (Placed directly under Orders) */}
-              <div className="flex flex-col my-1">
-                <button
-                  onClick={() => setIsProductDetailsOpen(!isProductDetailsOpen)}
-                  className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center justify-between transition-all ${
-                    isProductDetailsTab
-                      ? 'bg-white/10 text-white'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                  }`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <Layers className="w-5 h-5 text-amber-500" />
-                    <span>Product Details</span>
-                  </div>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isProductDetailsOpen ? 'rotate-180 text-white' : 'text-slate-500'
-                    }`}
-                  />
-                </button>
-
-                {/* Submenus under Product Details */}
-                {isProductDetailsOpen && (
-                  <div className="pl-4 pr-1 py-1 space-y-1 border-l border-white/10 ml-5 my-1.5">
-                    {PRODUCT_DETAILS_ITEMS.map((subItem) => {
-                      const SubIcon = subItem.icon;
-                      const active = activeTab === subItem.id;
-                      return (
-                        <button
-                          key={subItem.id}
-                          onClick={() => handleSelectTab(subItem.id)}
-                          className={`w-full px-3 py-2 rounded-xl text-[12px] font-bold flex items-center gap-3 transition-all ${
-                            active
-                              ? 'bg-white text-slate-950 font-black shadow-xs'
-                              : 'text-slate-400 hover:text-white hover:bg-white/5'
-                          }`}
-                        >
-                          <SubIcon className={`w-4 h-4 ${active ? 'text-slate-950' : 'text-slate-400'}`} />
-                          <span className="truncate">{subItem.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                <NavItem id="marketplace" label="Marketplace" icon={Store}
+                  active={activeTab === 'marketplace'} onClick={() => handleSelectTab('marketplace')} />
+                <NavItem id="reports" label="Reports" icon={BarChart3}
+                  active={activeTab === 'reports'} onClick={() => handleSelectTab('reports')} />
               </div>
-
-              {/* Marketplace */}
-              <button
-                onClick={() => handleSelectTab('marketplace')}
-                className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                  activeTab === 'marketplace'
-                    ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <Store className="w-5 h-5" />
-                <span>Marketplace</span>
-              </button>
-
-              {/* Reports */}
-              <button
-                onClick={() => handleSelectTab('reports')}
-                className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                  activeTab === 'reports'
-                    ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <BarChart3 className="w-5 h-5" />
-                <span>Reports</span>
-              </button>
             </div>
 
-            {/* People Menu Group */}
-            <div className="flex flex-col gap-1.5 mt-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-3.5 mb-1">
-                Access & Team
-              </span>
-
-              {PEOPLE_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const active = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleSelectTab(item.id)}
-                    className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-                      active
-                        ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
+            {/* Access & Team */}
+            <div className="flex flex-col gap-1">
+              <SectionLabel label="Access & Team" />
+              <div className="mt-1.5 flex flex-col gap-0.5">
+                {PEOPLE_ITEMS.map((item) => (
+                  <NavItem key={item.id} id={item.id} label={item.label} icon={item.icon}
+                    active={activeTab === item.id} onClick={() => handleSelectTab(item.id)} />
+                ))}
+              </div>
             </div>
           </>
-        ) : null}
+        )}
 
-        {/* Tools Section (Visible to Everyone) */}
-        <div className="flex flex-col gap-1.5 mt-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-3.5 mb-1">
-            System
-          </span>
-
-          <button
-            onClick={() => handleSelectTab('settings')}
-            className={`w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 transition-all ${
-              activeTab === 'settings'
-                ? 'bg-white text-slate-950 shadow-md font-black scale-[1.02]'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-            }`}
-          >
-            <Sliders className="w-5 h-5" />
-            <span>Settings</span>
-          </button>
-
-          <button
-            onClick={() => {
-              if (onLogout) onLogout();
-            }}
-            className="w-full px-4 py-3 rounded-2xl text-[13px] font-bold flex items-center gap-3.5 text-slate-400 hover:text-rose-400 hover:bg-white/5 transition-all cursor-pointer"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>Logout</span>
-          </button>
+        {/* System */}
+        <div className="flex flex-col gap-1">
+          <SectionLabel label="System" />
+          <div className="mt-1.5 flex flex-col gap-0.5">
+            <NavItem id="settings" label="Settings" icon={Sliders}
+              active={activeTab === 'settings'} onClick={() => handleSelectTab('settings')} />
+            <button
+              onClick={() => { if (onLogout) onLogout(); }}
+              className="w-full px-4 py-3 rounded-2xl text-[13px] font-extrabold flex items-center gap-3 transition-all"
+              style={{ color: 'rgba(255,255,255,0.50)', background: 'transparent' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(244,63,94,0.12)'; e.currentTarget.style.color = '#FB7185'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.50)'; }}
+            >
+              <LogOut className="w-5 h-5 shrink-0" />
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* AI Promo Card */}
-      <div className="px-5 pb-6 mt-6">
-        <div className="bg-gradient-to-b from-slate-800/90 to-[#1e293b] p-4 rounded-[24px] border border-white/10 relative overflow-hidden shadow-lg">
-          <div className="absolute -top-4 -right-4 w-20 h-20 bg-amber-500/10 rounded-full blur-lg" />
+      {/* ── AI Promo Card ─────────────────────────────────── */}
+      <div className="px-4 pb-6 mt-2">
+        <div className="relative overflow-hidden p-4 flex flex-col gap-3"
+          style={{
+            background: 'linear-gradient(135deg, rgba(108,60,225,0.35) 0%, rgba(91,33,182,0.50) 100%)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid rgba(167,139,250,0.25)',
+          }}>
+          {/* Glow blob */}
+          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full blur-xl pointer-events-none"
+            style={{ background: 'rgba(167,139,250,0.30)' }} />
 
-          <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center mb-3 text-amber-400">
-            <Bot className="w-5 h-5" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-2xl"
+            style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.20)' }}>
+            <Bot className="w-5 h-5 text-white" />
           </div>
 
-          <h4 className="text-[13px] font-black text-white leading-snug mb-3">
-            Empowering<br />Decision with AI
-          </h4>
+          <div>
+            <h4 className="text-[13px] font-black text-white leading-snug">
+              Empowering Decisions<br />with AI Intelligence
+            </h4>
+            <p className="text-[10px] mt-0.5 font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              Real-time insights & automation
+            </p>
+          </div>
 
           <button
-            onClick={() => {
-              onOpenAiModal();
-              if (onCloseMobile) onCloseMobile();
+            onClick={() => { onOpenAiModal(); if (onCloseMobile) onCloseMobile(); }}
+            className="w-full py-2.5 rounded-full text-xs font-black flex items-center justify-center gap-1.5 transition-all"
+            style={{
+              background: 'linear-gradient(135deg,#F43F5E 0%,#FB923C 100%)',
+              color: '#fff',
+              boxShadow: '0 4px 14px rgba(244,63,94,0.40)',
             }}
-            className="w-full py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Unlock AI Magic</span>
+            <Sparkles className="w-3.5 h-3.5" />
+            Unlock AI Magic
           </button>
         </div>
       </div>

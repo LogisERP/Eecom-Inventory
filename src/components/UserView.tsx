@@ -88,103 +88,70 @@ export const UserView: React.FC = () => {
   const activeCount = users.filter(u => u.isActive).length;
 
   return (
-    <div className="flex flex-col gap-6 pt-4 pb-8">
+    <div className="flex flex-col gap-5 pt-4 pb-8" style={{ fontFamily: 'var(--font-game)' }}>
 
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-[#141c25] via-[#1e293b] to-[#0f172a] rounded-2xl p-5 sm:p-6 text-white shadow-lg border border-slate-800 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 shadow-inner">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                User Management
-                <span className="text-[10px] font-extrabold uppercase bg-blue-500/20 text-blue-300 px-2.5 py-0.5 rounded-full border border-blue-400/30">
-                  People Group
-                </span>
-              </h1>
-              <p className="text-xs text-slate-300 font-medium mt-0.5">
-                Manage accounts, role assignments, phone numbers (+91), and profile avatars.
-              </p>
-            </div>
+      <div className="relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-7"
+        style={{ background: 'linear-gradient(135deg,#1A1033 0%,#231547 60%,#2D1A5A 100%)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)' }}>
+        <div className="absolute top-0 right-0 w-56 h-56 rounded-full blur-3xl pointer-events-none" style={{ background: 'rgba(108,60,225,0.25)' }} />
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black mb-2" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)' }}>
+            <span className="w-2 h-2 rounded-full" style={{ background: 'var(--clr-primary)' }} /> PEOPLE GROUP
           </div>
-
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white font-extrabold text-xs shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition-all transform active:scale-95 shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add User</span>
-          </button>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-6 pt-5 border-t border-slate-800/80">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Registered Users</span>
-              <p className="text-xl font-black text-white mt-0.5">{users.length}</p>
-            </div>
-            <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
-              <Users className="w-4 h-4" />
-            </div>
-          </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Accounts</span>
-              <p className="text-xl font-black text-emerald-400 mt-0.5">{activeCount}</p>
-            </div>
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+            User Management
+            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(108,60,225,0.25)', color: '#C4B5FD', border: '1px solid rgba(167,139,250,0.30)' }}>Accounts</span>
+          </h1>
+          <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>Manage accounts, role assignments, phone numbers (+91), and profile avatars.</p>
+          <div className="grid grid-cols-2 gap-3 mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+            {[{ label: 'Total Registered Users', val: users.length, color: '#fff' }, { label: 'Active Accounts', val: activeCount, color: '#34D399' }].map(s => (
+              <div key={s.label} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.10)' }}>
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>{s.label}</span>
+                <p className="text-xl font-black mt-0.5" style={{ color: s.color }}>{s.val}</p>
+              </div>
+            ))}
           </div>
         </div>
+        <button onClick={() => setIsAddModalOpen(true)}
+          className="relative z-10 flex items-center justify-center gap-2 font-black text-xs self-start sm:self-auto"
+          style={{ background: 'var(--grad-accent)', color: '#fff', borderRadius: 'var(--radius-pill)', padding: '12px 24px', boxShadow: 'var(--shadow-btn-accent)', border: 'none', cursor: 'pointer' }}>
+          <Plus className="w-4 h-4" /><span>Add User</span>
+        </button>
       </div>
 
-      {/* Toolbar & Search */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="relative w-full sm:w-96">
-          <Search className="w-4 h-4 text-blue-600 absolute left-3.5 top-3 font-extrabold" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by User name, email, phone, or role..."
-            className="w-full pl-10 pr-4 py-2 text-xs font-bold text-slate-900 bg-white border-2 border-slate-300/90 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/15 focus:border-blue-600 shadow-xs transition-all placeholder:text-slate-500 placeholder:font-medium"
-          />
+      {/* Toolbar */}
+      <div className="p-4 sm:p-5 flex items-center justify-between flex-wrap gap-3" style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)' }}>
+        <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 sm:max-w-sm" style={{ background: 'var(--clr-primary-lt)', border: '1.5px solid var(--border-base)', borderRadius: 'var(--radius-pill)' }}>
+          <Search className="w-4 h-4 shrink-0" style={{ color: 'var(--clr-primary)' }} />
+          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by User name, email, phone, or role..." className="bg-transparent border-none outline-none text-xs font-bold w-full" style={{ color: 'var(--txt-primary)' }} />
         </div>
-
-        <div className="text-xs font-semibold text-slate-500">
-          Showing <strong className="text-slate-800">{filteredUsers.length}</strong> users
-        </div>
+        <div className="text-xs font-semibold" style={{ color: 'var(--txt-muted)' }}>Showing <strong style={{ color: 'var(--txt-primary)' }}>{filteredUsers.length}</strong> users</div>
       </div>
 
       {/* User Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
         {loading ? (
-          <div className="p-12 flex flex-col items-center justify-center gap-3 text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <p className="text-xs font-bold text-slate-600">Loading Users from Firebase DB...</p>
+          <div className="p-12 flex flex-col items-center justify-center gap-3">
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--clr-primary)' }} />
+            <p className="text-xs font-bold" style={{ color: 'var(--txt-secondary)' }}>Loading Users from Firebase DB...</p>
           </div>
         ) : error ? (
           <div className="p-8 text-center flex flex-col items-center justify-center gap-2">
-            <AlertTriangle className="w-8 h-8 text-rose-500" />
-            <p className="text-xs font-bold text-rose-700">{error}</p>
+            <AlertTriangle className="w-8 h-8" style={{ color: 'var(--clr-error)' }} />
+            <p className="text-xs font-bold" style={{ color: 'var(--clr-error)' }}>{error}</p>
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
-            <Users className="w-8 h-8 text-slate-300" />
-            <p className="text-xs font-bold text-slate-600">No users found.</p>
+            <div className="w-14 h-14 rounded-3xl flex items-center justify-center" style={{ background: 'var(--clr-primary-lt)' }}>
+              <Users className="w-6 h-6" style={{ color: 'var(--clr-primary)' }} />
+            </div>
+            <p className="text-sm font-bold" style={{ color: 'var(--txt-secondary)' }}>No users found.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+                <tr className="text-[11px] font-extrabold uppercase tracking-wider" style={{ background: 'var(--clr-primary-lt)', borderBottom: '2px solid var(--border-strong)', color: 'var(--clr-primary)' }}>
                   <th className="py-3.5 px-5">User Profile</th>
                   <th className="py-3.5 px-4">Contact Info</th>
                   <th className="py-3.5 px-4">Role</th>
@@ -192,113 +159,71 @@ export const UserView: React.FC = () => {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
-                {filteredUsers.map((u) => {
+              <tbody>
+                {filteredUsers.map((u, idx) => {
                   const isDeletingThis = deletingId === u.id;
-
                   return (
-                    <tr key={u.id || u.email} className="hover:bg-slate-50/70 transition-colors">
-                      {/* User Profile */}
+                    <tr key={u.id || u.email} className="transition-colors"
+                      style={{ borderBottom: '1px solid var(--border-base)', background: idx % 2 === 0 ? '#fff' : '#FAFBFF' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-primary-lt)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#FAFBFF'; }}
+                    >
                       <td className="py-3.5 px-5">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={u.profilePic || DEFAULT_AVATAR}
-                            alt={u.userName}
-                            onError={(e) => {
-                              const img = e.target as HTMLImageElement;
-                              img.onerror = null;
-                              img.src = DEFAULT_AVATAR;
-                            }}
-                            className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
-                          />
+                          <img src={u.profilePic || DEFAULT_AVATAR} alt={u.userName}
+                            onError={(e) => { const img = e.target as HTMLImageElement; img.onerror = null; img.src = DEFAULT_AVATAR; }}
+                            className="w-10 h-10 rounded-xl object-cover shrink-0"
+                            style={{ border: '2px solid var(--clr-primary-lt)' }} />
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <span
-                                onClick={() => setSelectedUser(u)}
-                                className="font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer transition-colors block text-sm"
-                              >
-                                {u.userName}
-                              </span>
-                              <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
-                                {u.userId || 'USR-1001'}
-                              </span>
+                              <span onClick={() => setSelectedUser(u)} className="font-extrabold text-sm cursor-pointer transition-colors" style={{ color: 'var(--txt-primary)' }}
+                                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--clr-primary)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--txt-primary)'; }}>{u.userName}</span>
+                              <span className="text-[10px] font-mono font-black px-1.5 py-0.5 rounded" style={{ color: 'var(--clr-primary)', background: 'var(--clr-primary-lt)' }}>{u.userId || 'USR-1001'}</span>
                             </div>
-                            <span className="text-[11px] text-slate-500 font-medium">{u.timeZone.split(' ')[0]}</span>
+                            <span className="text-[11px] font-medium" style={{ color: 'var(--txt-muted)' }}>{u.timeZone.split(' ')[0]}</span>
                           </div>
                         </div>
                       </td>
-
-                      {/* Contact Info */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-slate-800 font-semibold flex items-center gap-1">
-                            <Mail className="w-3 h-3 text-slate-400" />
-                            {u.email}
-                          </span>
-                          <span className="text-[11px] text-slate-500 font-mono flex items-center gap-1">
-                            <Phone className="w-3 h-3 text-slate-400" />
-                            {u.phoneNumber}
-                          </span>
+                          <span className="font-semibold text-xs flex items-center gap-1" style={{ color: 'var(--txt-secondary)' }}><Mail className="w-3 h-3" style={{ color: 'var(--txt-muted)' }} />{u.email}</span>
+                          <span className="text-[11px] font-mono flex items-center gap-1" style={{ color: 'var(--txt-muted)' }}><Phone className="w-3 h-3" />{u.phoneNumber}</span>
                         </div>
                       </td>
-
-                      {/* Role */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                          <Shield className="w-3 h-3 text-purple-600" />
-                          {u.roleName}
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold" style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)' }}>
+                          <Shield className="w-3 h-3" />{u.roleName}
                         </span>
                       </td>
-
-                      {/* Is Active */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         {u.isActive ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Active
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold" style={{ background: 'var(--clr-success-lt)', color: 'var(--clr-success)' }}>
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
-                            <XCircle className="w-3.5 h-3.5 text-rose-500" /> Inactive
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold" style={{ background: 'var(--clr-error-lt)', color: 'var(--clr-error)' }}>
+                            <XCircle className="w-3.5 h-3.5" /> Inactive
                           </span>
                         )}
                       </td>
-
-                      {/* Actions */}
                       <td className="py-3.5 px-4 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => setSelectedUser(u)}
-                            className="p-2 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 font-semibold text-xs flex items-center gap-1"
-                            title="View User Details"
-                          >
-                            <Eye className="w-4 h-4 text-blue-600" />
-                            <span className="hidden sm:inline">View</span>
-                          </button>
-
-                          <button
-                            onClick={() => setEditingUser(u)}
-                            className="p-2 rounded-xl text-slate-600 hover:text-amber-600 hover:bg-amber-50 border border-slate-200 font-semibold text-xs flex items-center gap-1"
-                            title="Edit User"
-                          >
-                            <Edit3 className="w-4 h-4 text-amber-600" />
-                            <span className="hidden sm:inline">Edit</span>
-                          </button>
-
-                          <button
-                            onClick={() => setItemToDeleteConfirm(u)}
-                            disabled={isDeletingThis}
-                            className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 font-semibold text-xs flex items-center gap-1"
-                            title="Delete User"
-                          >
-                            {isDeletingThis ? (
-                              <Loader2 className="w-4 h-4 animate-spin text-rose-600" />
-                            ) : (
-                              <>
-                                <Trash2 className="w-4 h-4 text-rose-500" />
-                                <span className="hidden sm:inline text-rose-600">Delete</span>
-                              </>
-                            )}
-                          </button>
+                          {[{ fn: () => setSelectedUser(u), icon: <Eye className="w-4 h-4" />, label: 'View', hBg: 'var(--clr-primary-lt)', hColor: 'var(--clr-primary)' },
+                            { fn: () => setEditingUser(u), icon: <Edit3 className="w-4 h-4" />, label: 'Edit', hBg: 'var(--clr-warning-lt)', hColor: 'var(--clr-warning)' },
+                          ].map((btn) => (
+                            <button key={btn.label} onClick={btn.fn} className="p-2 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all"
+                              style={{ border: '1.5px solid var(--border-base)', color: 'var(--txt-secondary)' }}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = btn.hBg; e.currentTarget.style.color = btn.hColor; e.currentTarget.style.borderColor = btn.hColor; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--txt-secondary)'; e.currentTarget.style.borderColor = 'var(--border-base)'; }}
+                            >{btn.icon}<span className="hidden sm:inline">{btn.label}</span></button>
+                          ))}
+                          <button onClick={() => setItemToDeleteConfirm(u)} disabled={isDeletingThis}
+                            className="p-2 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all"
+                            style={{ border: '1.5px solid var(--border-base)', color: 'var(--txt-secondary)' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-error-lt)'; e.currentTarget.style.color = 'var(--clr-error)'; e.currentTarget.style.borderColor = 'var(--clr-error)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--txt-secondary)'; e.currentTarget.style.borderColor = 'var(--border-base)'; }}
+                          >{isDeletingThis ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: 'var(--clr-error)' }} /> : <><Trash2 className="w-4 h-4" /><span className="hidden sm:inline">Delete</span></>}</button>
                         </div>
                       </td>
                     </tr>
@@ -312,34 +237,32 @@ export const UserView: React.FC = () => {
 
       {/* Confirm Delete Modal */}
       {itemToDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 flex flex-col gap-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: 'rgba(26,16,51,0.60)', backdropFilter: 'blur(8px)' }}>
+          <div className="w-full max-w-md p-6 flex flex-col gap-4 animate-scale-in"
+            style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-base)', boxShadow: 'var(--shadow-lg)' }}>
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'var(--clr-error-lt)', color: 'var(--clr-error)' }}>
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-slate-900">Delete User</h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">
-                  Are you sure you want to delete user <strong className="text-slate-800">"{itemToDeleteConfirm.userName}"</strong> ({itemToDeleteConfirm.email})?
+                <h3 className="text-base font-black" style={{ color: 'var(--txt-primary)' }}>Delete User</h3>
+                <p className="text-xs font-medium mt-1" style={{ color: 'var(--txt-secondary)' }}>
+                  Are you sure you want to delete user <strong style={{ color: 'var(--txt-primary)' }}>"{itemToDeleteConfirm.userName}"</strong> ({itemToDeleteConfirm.email})?
                 </p>
               </div>
             </div>
-
             <div className="flex items-center justify-end gap-2.5 pt-2">
-              <button
-                onClick={() => setItemToDeleteConfirm(null)}
-                className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleListDeleteConfirm}
-                disabled={deletingId !== null}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
-              >
-                {deletingId ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                Delete
+              <button onClick={() => setItemToDeleteConfirm(null)}
+                className="px-4 py-2 text-xs font-bold transition-all"
+                style={{ background: 'transparent', borderRadius: 'var(--radius-sm)', border: '1.5px solid var(--border-base)', color: 'var(--txt-secondary)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--clr-primary-lt)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              >Cancel</button>
+              <button onClick={handleListDeleteConfirm} disabled={deletingId !== null}
+                className="px-4 py-2 text-xs font-black text-white flex items-center gap-1.5"
+                style={{ background: 'var(--clr-error)', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(239,68,68,0.35)' }}>
+                {deletingId ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />} Delete
               </button>
             </div>
           </div>

@@ -7,7 +7,8 @@ import {
   LogIn,
   AlertCircle,
   Loader2,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 import type { UserItem } from '../types/people';
 import { authenticateUser } from '../services/authService';
@@ -20,7 +21,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [phoneDigits, setPhoneDigits] = useState('9876543210');
   const [password, setPassword] = useState('Password@123');
   const [showPassword, setShowPassword] = useState(false);
-
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -34,77 +34,108 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     e.preventDefault();
     setErrorMsg(null);
     setSuccessMsg(null);
-
     if (!phoneDigits || phoneDigits.length !== 10) {
-      setErrorMsg('Please enter a 10-digit Phone Number after +91.');
+      setErrorMsg('Please enter a valid 10-digit phone number.');
       return;
     }
-
     if (!password) {
       setErrorMsg('Please enter your password.');
       return;
     }
-
     try {
       setIsLoading(true);
       const user = await authenticateUser(phoneDigits, password);
-      setSuccessMsg(`Welcome, ${user.userName}!`);
-
-      setTimeout(() => {
-        setIsLoading(false);
-        onLoginSuccess(user);
-      }, 500);
+      setSuccessMsg(`Welcome back, ${user.userName}! 🎉`);
+      setTimeout(() => { setIsLoading(false); onLoginSuccess(user); }, 600);
     } catch (err: any) {
-      console.error('Login error:', err);
-      setErrorMsg(err.message || 'Invalid Phone Number or Password.');
+      setErrorMsg(err.message || 'Invalid credentials. Please try again.');
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0f172a] text-slate-100 flex items-center justify-center p-4 font-sans">
-      
-      {/* Compact Simple Card */}
-      <div className="w-full max-w-sm bg-[#1e293b] border border-slate-700/70 rounded-2xl p-6 sm:p-7 shadow-xl">
-        
-        {/* Brand Header */}
-        <div className="text-center mb-6">
-          <img src="/logo.png" alt="App Logo" className="h-12 w-auto max-w-[140px] rounded-xl object-contain bg-white px-2 py-1 shadow-lg mx-auto mb-3 border border-slate-700" />
-          <h1 className="text-xl font-extrabold tracking-tight">
-            <span className="text-white">Ecom </span>
-            <span className="text-blue-400">ERP</span>
+    <div
+      className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: 'var(--grad-app-bg)', fontFamily: 'var(--font-game)' }}
+    >
+      {/* Decorative blobs */}
+      <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full blur-3xl pointer-events-none"
+        style={{ background: 'rgba(108,60,225,0.18)' }} />
+      <div className="absolute -bottom-24 -right-24 w-72 h-72 rounded-full blur-3xl pointer-events-none"
+        style={{ background: 'rgba(244,63,94,0.12)' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl pointer-events-none"
+        style={{ background: 'rgba(108,60,225,0.07)' }} />
+
+      {/* Card */}
+      <div
+        className="relative w-full max-w-sm animate-scale-in"
+        style={{
+          background: 'rgba(255,255,255,0.90)',
+          backdropFilter: 'blur(24px)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1.5px solid rgba(108,60,225,0.15)',
+          boxShadow: '0 24px 64px rgba(108,60,225,0.18), 0 2px 8px rgba(108,60,225,0.08)',
+          padding: '36px 32px 32px',
+        }}
+      >
+        {/* Header */}
+        <div className="text-center mb-7">
+          {/* Logo badge */}
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl mb-4 p-2.5 shadow-xl"
+            style={{
+              background: '#FFFFFF',
+              border: '2px solid var(--border-base)',
+              boxShadow: '0 8px 24px rgba(112,67,245,0.18)',
+            }}>
+            <img src="/logo-mark.png" alt="Logo"
+              className="w-full h-full object-contain"
+              onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
+            />
+          </div>
+
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--txt-primary)' }}>
+            Ecom <span style={{ color: 'var(--clr-primary)' }}>ERP</span>
           </h1>
-          <p className="text-xs text-slate-400 font-medium mt-1">Sign in with phone number & password</p>
+          <p className="text-xs font-semibold mt-1" style={{ color: 'var(--txt-muted)' }}>
+            Sign in to your workspace
+          </p>
+
+          {/* PRO badge */}
+          <div className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-[10px] font-black"
+            style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)' }}>
+            <Sparkles className="w-2.5 h-2.5" /> PRO SUITE
+          </div>
         </div>
 
-        {/* Error Message */}
+        {/* Alert messages */}
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          <div className="mb-4 p-3 rounded-2xl text-xs font-bold flex items-center gap-2 animate-fade-in"
+            style={{ background: 'var(--clr-error-lt)', border: '1px solid rgba(239,68,68,0.25)', color: 'var(--clr-error)' }}>
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
-
-        {/* Success Message */}
         {successMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="mb-4 p-3 rounded-2xl text-xs font-bold flex items-center gap-2 animate-fade-in"
+            style={{ background: 'var(--clr-success-lt)', border: '1px solid rgba(16,185,129,0.25)', color: 'var(--clr-success)' }}>
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}
 
-        {/* Simple Form */}
+        {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          
-          {/* Phone Number Input */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5 text-blue-400" />
-              Phone Number <span className="text-rose-400">*</span>
-            </label>
 
+          {/* Phone */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-extrabold flex items-center gap-1.5"
+              style={{ color: 'var(--txt-primary)' }}>
+              <Phone className="w-3.5 h-3.5" style={{ color: 'var(--clr-primary)' }} />
+              Phone Number <span style={{ color: 'var(--clr-accent)' }}>*</span>
+            </label>
             <div className="flex items-center gap-2">
-              <span className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 select-none shrink-0">
+              <span className="px-3 py-2.5 text-xs font-black rounded-xl shrink-0 select-none"
+                style={{ background: 'var(--clr-primary-lt)', color: 'var(--clr-primary)', border: '1.5px solid var(--border-base)' }}>
                 +91
               </span>
               <input
@@ -112,62 +143,86 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 maxLength={10}
                 value={phoneDigits}
                 onChange={handlePhoneChange}
-                placeholder="10 digit number"
+                placeholder="10-digit number"
                 required
-                className="w-full px-3.5 py-2.5 text-xs font-mono font-bold text-white bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder:text-slate-500"
+                className="w-full px-4 py-2.5 text-xs font-bold outline-none transition-all"
+                style={{
+                  background: '#F8F6FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--txt-primary)',
+                  fontFamily: 'monospace',
+                }}
+                onFocus={(e) => { e.target.style.borderColor = 'var(--clr-primary)'; e.target.style.boxShadow = '0 0 0 3px var(--clr-primary-glow)'; }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--border-base)'; e.target.style.boxShadow = 'none'; }}
               />
             </div>
           </div>
 
-          {/* Password Input */}
+          {/* Password */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1">
-              <Lock className="w-3.5 h-3.5 text-blue-400" />
-              Password <span className="text-rose-400">*</span>
+            <label className="text-xs font-extrabold flex items-center gap-1.5"
+              style={{ color: 'var(--txt-primary)' }}>
+              <Lock className="w-3.5 h-3.5" style={{ color: 'var(--clr-primary)' }} />
+              Password <span style={{ color: 'var(--clr-accent)' }}>*</span>
             </label>
-
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder="Enter your password"
                 required
-                className="w-full pl-3.5 pr-10 py-2.5 text-xs font-semibold text-white bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder:text-slate-500"
+                className="w-full pl-4 pr-10 py-2.5 text-xs font-semibold outline-none transition-all"
+                style={{
+                  background: '#F8F6FF',
+                  border: '1.5px solid var(--border-base)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--txt-primary)',
+                }}
+                onFocus={(e) => { e.target.style.borderColor = 'var(--clr-primary)'; e.target.style.boxShadow = '0 0 0 3px var(--clr-primary-glow)'; }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--border-base)'; e.target.style.boxShadow = 'none'; }}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-slate-400 hover:text-slate-200"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors"
+                style={{ color: 'var(--txt-muted)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--clr-primary)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--txt-muted)')}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
+            id="login-submit-btn"
             type="submit"
             disabled={isLoading}
-            className="mt-2 w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="mt-2 w-full py-3 text-white font-black text-sm flex items-center justify-center gap-2 transition-all disabled:opacity-60"
+            style={{
+              background: isLoading ? 'var(--clr-primary)' : 'var(--grad-primary)',
+              borderRadius: 'var(--radius-pill)',
+              boxShadow: 'var(--shadow-btn)',
+              border: 'none',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+            }}
           >
             {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Signing In...</span>
-              </>
+              <><Loader2 className="w-4 h-4 animate-spin" /><span>Signing In...</span></>
             ) : (
-              <>
-                <LogIn className="w-4 h-4" />
-                <span>Sign In</span>
-              </>
+              <><LogIn className="w-4 h-4" /><span>Sign In</span></>
             )}
           </button>
-
         </form>
 
+        {/* Footer note */}
+        <p className="text-center text-[10px] font-semibold mt-5" style={{ color: 'var(--txt-muted)' }}>
+          Powered by <span className="font-black" style={{ color: 'var(--clr-primary)' }}>Ecom ERP</span> · Secured via Firebase Auth
+        </p>
       </div>
-
     </div>
   );
 };
