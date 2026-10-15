@@ -36,11 +36,12 @@ jobs:
         run: npm install -g @capacitor/cli
 
       # ── 6. Setup Java (required for Gradle) ───────────────────────────────
-      - name: Set up Java 17
+      # Capacitor Android v7 uses sourceCompatibility = JavaVersion.VERSION_21
+      - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       # ── 7. Accept Android SDK licenses ────────────────────────────────────
       # ubuntu-latest already ships with the Android SDK at $ANDROID_SDK_ROOT.
