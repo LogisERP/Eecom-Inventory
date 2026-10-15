@@ -1,0 +1,74 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual triggers too
+
+jobs:
+  build-android:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout repo ──────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ──────────────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Install dependencies ───────────────────────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── 4. Build Vite web app ─────────────────────────────────────────────
+      - name: Build web app
+        run: npm run build
+
+      # ── 5. Install Capacitor CLI globally ─────────────────────────────────
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli
+
+      # ── 6. Setup Java (required for Gradle / Android SDK) ────────────────
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── 7. Setup Android SDK ──────────────────────────────────────────────
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # ── 8. Accept Android SDK licenses ───────────────────────────────────
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+
+      # ── 9. Sync Capacitor → Android ───────────────────────────────────────
+      # "npx cap sync android" copies dist/ into the android/ project and
+      # updates any Capacitor plugins.
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+
+      # ── 10. Make gradlew executable ───────────────────────────────────────
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      # ── 11. Build Debug APK ───────────────────────────────────────────────
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      # ── 12. Upload APK as artifact ────────────────────────────────────────
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecom-erp-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
